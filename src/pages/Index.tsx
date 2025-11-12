@@ -11,29 +11,34 @@ const Index = () => {
       <Header />
       <ChatBot />
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 bg-gradient-hero text-primary-foreground">
-        <div className="container mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Professional Websites.<br />
-            Transparent Prices.<br />
-            Built for Mobile.
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90 max-w-3xl mx-auto">
-            Grow your business online with fixed-scope web development packages starting at KSh 20,000
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-gradient-accent text-lg">
-              <Link to="/packages">
-                View Packages <ArrowRight className="ml-2" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="secondary" className="text-lg">
-              <Link to="/portfolio">See Our Work</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+     {/* Hero Section */}
+<section 
+  className="pt-32 pb-20 px-4 text-gray-900 relative bg-cover bg-center bg-no-repeat"
+  style={{
+    backgroundImage: 'linear-gradient(45deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8)), url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80")'
+  }}
+>
+  <div className="container mx-auto text-center relative z-10">
+    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+      <span className="text-indigo-600">Professional</span> <span className="text-gray-800">Websites.</span><br />
+      <span className="text-pink-500">Transparent</span> <span className="text-gray-800">Prices.</span><br />
+      <span className="text-green-500">Built for</span> <span className="text-gray-800">Mobile.</span>
+    </h1>
+    <p className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-700 max-w-3xl mx-auto">
+      Grow your business online with fixed-scope web development packages starting at <span className="text-red-500 font-bold text-xl">KSh 20,000</span>
+    </p>
+    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <Button asChild size="lg" className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-lg hover:from-indigo-600 hover:to-purple-700 font-semibold">
+        <Link to="/packages">
+          View Packages <ArrowRight className="ml-2" />
+        </Link>
+      </Button>
+      <Button asChild size="lg" variant="secondary" className="text-lg bg-gray-800 text-white hover:bg-gray-900">
+        <Link to="/portfolio">See Our Work</Link>
+      </Button>
+    </div>
+  </div>
+</section>
 
       {/* Features */}
       <section className="py-20 px-4">
