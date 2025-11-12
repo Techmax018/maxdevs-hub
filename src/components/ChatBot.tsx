@@ -8,7 +8,7 @@ Keep your responses concise, welcoming, and focused on gathering basic informati
 Your first message should be a friendly greeting and a soft question about their project.
 `;
 
-const API_KEY = "" // If you want to use models other than gemini-2.5-flash-preview-09-2025, provide an API key here. Otherwise, leave this as-is.
+const API_KEY = "AIzaSyA2mI7pdYX1dbzgZ3joYFTmezlCTWU3Bnc" // If you want to use models other than gemini-2.5-flash-preview-09-2025, provide an API key here. Otherwise, leave this as-is
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
 
 
