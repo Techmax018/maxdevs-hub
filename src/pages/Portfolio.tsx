@@ -11,7 +11,7 @@ const Portfolio = () => {
       service: "Enterprise Package",
       result: "150% increase in online sales",
       image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&q=80",
-      link: "https://login-37da6.web.app",
+      link: "https://beauty-shop-e7176.web.app",
       challenge: "Client needed a modern e-commerce platform with M-Pesa integration",
       solution: "Built a custom E-Commerce solution with mobile-first design and local payment gateways",
       results: [
@@ -26,8 +26,8 @@ const Portfolio = () => {
       result: "45% reduction in bounce rate",
       image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
       link: "https://blue-moon-travel.vercel.app",
-      challenge: "Outdated website with poor mobile experience and low conversion rates",
-      solution: "Complete redesign with modern UI, optimized content structure, and clear CTAs",
+      challenge: "Outdated booking platforms ",
+      solution: "Travel booking hub to help you with your holiday plannings",
       results: [
         "45% reduction in bounce rate",
         "3x increase in contact form submissions",
