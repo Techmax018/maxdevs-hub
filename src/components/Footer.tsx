@@ -60,11 +60,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-primary-foreground/80">
                 <Phone size={16} />
-                <span>+254 700 000 000</span>
+                <span>+254 703 161 031</span>
               </li>
               <li className="flex items-center gap-2 text-primary-foreground/80">
                 <MapPin size={16} />
-                <span>Nairobi, Kenya</span>
+                <span>Eldoret, Kenya</span>
               </li>
             </ul>
           </div>
