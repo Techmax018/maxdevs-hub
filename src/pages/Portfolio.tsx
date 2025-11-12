@@ -12,7 +12,7 @@ const Portfolio = () => {
       result: "150% increase in online sales",
       image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&q=80",
       challenge: "Client needed a modern e-commerce platform with M-Pesa integration",
-      solution: "Built a custom WooCommerce solution with mobile-first design and local payment gateways",
+      solution: "Built a custom E-Commerce solution with mobile-first design and local payment gateways",
       results: [
         "150% increase in online sales within 3 months",
         "Mobile traffic conversion up by 85%",
