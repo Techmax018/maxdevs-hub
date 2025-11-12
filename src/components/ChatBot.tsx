@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// --- CONFIGURATION ---
+// --- DEEPSEEK CONFIGURATION ---
 const SYSTEM_INSTRUCTION = `
 You are 'Max', a helpful and friendly chatbot for MaxDevs, a web development agency.
 Your role is to engage users in a conversation about their project ideas.
@@ -8,9 +8,8 @@ Keep your responses concise, welcoming, and focused on gathering basic informati
 Your first message should be a friendly greeting and a soft question about their project.
 `;
 
-const API_KEY = "AIzaSyA2mI7pdYX1dbzgZ3joYFTmezlCTWU3Bnc" // If you want to use models other than gemini-2.5-flash-preview-09-2025, provide an API key here. Otherwise, leave this as-is
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
-
+const API_KEY = "YOUR_DEEPSEEK_API_KEY"; // Replace with your DeepSeek API key
+const API_URL = "https://api.deepseek.com/v1/chat/completions";
 
 // --- REACT COMPONENT ---
 
@@ -53,45 +52,54 @@ const App = () => {
         // 1. Add user message to chat history
         setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
 
-        // 2. Prepare simple API payload
-        const chatHistory = messages.slice(1).map(msg => ({ // Exclude initial greeting from history payload
-            role: msg.role === 'bot' ? 'model' : 'user',
-            parts: [{ text: msg.text }]
+        // 2. Prepare DeepSeek API payload
+        const chatHistory = messages.map(msg => ({
+            role: msg.role === 'bot' ? 'assistant' : 'user',
+            content: msg.text
         }));
-        
-        chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+
+        // Add the new user message
+        chatHistory.push({ role: 'user', content: userMessage });
 
         const payload = {
-            contents: chatHistory,
-            systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-            tools: [{ "google_search": {} }],
+            model: "deepseek-chat", // or "deepseek-coder" for code-specific tasks
+            messages: [
+                { role: 'system', content: SYSTEM_INSTRUCTION },
+                ...chatHistory
+            ],
+            stream: false,
+            temperature: 0.7,
+            max_tokens: 1000
         };
 
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${API_KEY}`
+                },
                 body: JSON.stringify(payload)
             });
 
             if (!response.ok) {
                 const errorBody = await response.text();
-                throw new Error(`API call failed: ${response.status} - ${errorBody}`);
+                throw new Error(`DeepSeek API call failed: ${response.status} - ${errorBody}`);
             }
 
             const result = await response.json();
-            const botText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            const botText = result.choices?.[0]?.message?.content;
 
             if (botText) {
                 // 3. Add bot message to chat history
                 setMessages(prev => [...prev, { role: 'bot', text: botText }]);
             } else {
-                throw new Error('Received an empty response from the model.');
+                throw new Error('Received an empty response from DeepSeek.');
             }
 
         } catch (err) {
-            console.error('Gemini API Error:', err);
-            setError('There was an issue connecting to the service. Please try again.');
+            console.error('DeepSeek API Error:', err);
+            setError('There was an issue connecting to DeepSeek. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -136,7 +144,7 @@ const App = () => {
                 {/* Header (Teal Background) */}
                 <div className="p-4 border-b border-gray-100 bg-teal-600 text-white rounded-t-xl">
                     <h1 className="text-xl font-bold">Max AI Assistance</h1>
-                    <p className="text-teal-200 text-sm">A direct and friendly conversation interface.</p>
+                    <p className="text-teal-200 text-sm">Powered by DeepSeek</p>
                 </div>
 
                 {/* Chat Messages Area */}
