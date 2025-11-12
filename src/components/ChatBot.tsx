@@ -8,7 +8,7 @@ Keep your responses concise, welcoming, and focused on gathering basic informati
 Your first message should be a friendly greeting and a soft question about their project.
 `;
 
-const API_KEY = "YOUR_DEEPSEEK_API_KEY"; // Replace with your DeepSeek API key
+const API_KEY = "sk-431c45f9ba1e43c5a5a2d7980143837c"; // Replace with your DeepSeek API key
 const API_URL = "https://api.deepseek.com/v1/chat/completions";
 
 // --- REACT COMPONENT ---
