@@ -20,9 +20,9 @@ const Index = () => {
 >
   <div className="container mx-auto text-center relative z-10">
     <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-      <span className="text-indigo-600">Professional</span> <span className="text-gray-800">Websites.</span><br />
-      <span className="text-pink-500">Transparent</span> <span className="text-gray-800">Prices.</span><br />
-      <span className="text-green-500">Built for</span> <span className="text-gray-800">Mobile.</span>
+      <span className=""text-gray-800>Professional</span> <span className="text-indigo-600">Websites.</span><br />
+      <span className="text-gray-800">Transparent</span> <span className="text-pink-500">Prices.</span><br />
+      <span className="text-gray-800">Built for</span> <span className="text-green-500">Mobile.</span>
     </h1>
     <p className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-700 max-w-3xl mx-auto">
       Grow your business online with fixed-scope web development packages starting at <span className="text-red-500 font-bold text-xl">KSh 40,000</span>
