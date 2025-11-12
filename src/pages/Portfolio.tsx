@@ -11,6 +11,7 @@ const Portfolio = () => {
       service: "Enterprise Package",
       result: "150% increase in online sales",
       image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&q=80",
+      link: "https://login-37da6.web.app",
       challenge: "Client needed a modern e-commerce platform with M-Pesa integration",
       solution: "Built a custom E-Commerce solution with mobile-first design and local payment gateways",
       results: [
@@ -20,10 +21,11 @@ const Portfolio = () => {
       ],
     },
     {
-      title: "Professional Services Firm",
+      title: "Travel Platform",
       service: "Professional Package",
       result: "45% reduction in bounce rate",
       image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+      link: "https://blue-moon-travel.vercel.app",
       challenge: "Outdated website with poor mobile experience and low conversion rates",
       solution: "Complete redesign with modern UI, optimized content structure, and clear CTAs",
       results: [
@@ -33,10 +35,11 @@ const Portfolio = () => {
       ],
     },
     {
-      title: "Restaurant Chain Website",
+      title: "Portfolio Website",
       service: "Professional Package",
       result: "200% increase in online reservations",
       image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
+      link: "https://maxdevwebsite.vercel.app",
       challenge: "Needed an online presence with menu showcase and reservation system",
       solution: "Developed a visually appealing site with integrated booking system and online menu",
       results: [
@@ -95,7 +98,11 @@ const Portfolio = () => {
                     <div className="text-sm text-muted-foreground mb-1">Key Result</div>
                     <div className="text-lg font-bold text-accent">{project.result}</div>
                   </div>
-                  <Button variant="secondary" className="w-full">
+                  <Button 
+                    variant="secondary" 
+                    className="w-full"
+                    onClick={() => window.open(project.link, '_blank')}
+                  >
                     <ExternalLink className="mr-2 h-4 w-4" />
                     View Case Study
                   </Button>
