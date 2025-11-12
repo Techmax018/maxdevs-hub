@@ -3,7 +3,14 @@ import { MessageCircle, X, Send, Loader2, Bot, User, AlertTriangle } from 'lucid
 
 // --- Configuration ---
 const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
-const API_KEY = ""; // Provided by the Canvas environment
+
+// --- FIX FOR VERCEL DEPLOYMENT ---
+// The code now checks if the environment (Vercel) provides an environment variable.
+// If it finds one (VITE_GEMINI_API_KEY is a common convention), it uses it.
+// Otherwise, it defaults to the empty string for internal environments.
+const API_KEY = typeof process.env.VITE_GEMINI_API_KEY !== 'undefined' && process.env.VITE_GEMINI_API_KEY !== ''
+  ? process.env.VITE_GEMINI_API_KEY
+  : ""; 
 
 // System prompt instructing the AI how to behave and what data to use (KSh pricing)
 const systemInstruction = {
@@ -88,6 +95,11 @@ const Input = ({ value, onChange, onKeyPress, placeholder, className, type = 'te
 // --- Gemini API Handler ---
 
 const getGeminiResponse = async (chatHistory) => {
+  // If the key is not available (either from environment injection or Vercel env var), return an error
+  if (!API_KEY || API_KEY === '') {
+      return "API Key Missing or Invalid. Please ensure the environment (or Vercel environment variable VITE_GEMINI_API_KEY) is providing the necessary authentication.";
+  }
+    
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${API_KEY}`;
 
   // Format history for the API (role: user/model)
@@ -118,7 +130,7 @@ const getGeminiResponse = async (chatHistory) => {
 
         // Specific check for the 403 error from the API response (API Key issue)
         if (errorBody.error?.code === 403) {
-             return "API Key Missing or Invalid. Please ensure the environment provides the necessary authentication.";
+             return "API Key Missing or Invalid (403 Forbidden). Please check your VITE_GEMINI_API_KEY configuration in Vercel.";
         }
 
         throw new Error(`API error: ${response.statusText}`);
@@ -160,7 +172,9 @@ export default function ChatBot() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [chatError, setChatError] = useState(null);
+  const [chatError, setChatError] = useState(
+      (API_KEY === '' || !API_KEY) ? "API Key Missing or Invalid. Please ensure the environment (or Vercel environment variable VITE_GEMINI_API_KEY) is providing the necessary authentication." : null
+  );
   const chatWindowRef = useRef(null);
 
   const handleSend = async () => {
