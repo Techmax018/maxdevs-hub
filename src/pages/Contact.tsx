@@ -105,8 +105,8 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email</h3>
-                    <p className="text-muted-foreground">info@maxdevs.co.ke</p>
-                    <p className="text-muted-foreground">support@maxdevs.co.ke</p>
+                    <p className="text-muted-foreground">UNDEOWRLDHACKER7@GMAIL.COM</p>
+                    <p className="text-muted-foreground">underwolrdhacker7@gmail.com</p>
                   </div>
                 </div>
 
@@ -116,8 +116,8 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Phone</h3>
-                    <p className="text-muted-foreground">+254 700 000 000</p>
-                    <p className="text-muted-foreground">+254 711 000 000</p>
+                    <p className="text-muted-foreground">+254 703 161 031</p>
+                    <p className="text-muted-foreground">+254 786 493 506</p>
                   </div>
                 </div>
 
@@ -128,8 +128,8 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold mb-1">Location</h3>
                     <p className="text-muted-foreground">
-                      Nairobi, Kenya<br />
-                      West Ring Road
+                      Eldoret, Kenya<br />
+                      Kimumu
                     </p>
                   </div>
                 </div>
