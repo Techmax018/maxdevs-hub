@@ -25,7 +25,7 @@ const Index = () => {
       <span className="text-green-500">Built for</span> <span className="text-gray-800">Mobile.</span>
     </h1>
     <p className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-700 max-w-3xl mx-auto">
-      Grow your business online with fixed-scope web development packages starting at <span className="text-red-500 font-bold text-xl">KSh 20,000</span>
+      Grow your business online with fixed-scope web development packages starting at <span className="text-red-500 font-bold text-xl">KSh 40,000</span>
     </p>
     <div className="flex flex-col sm:flex-row gap-4 justify-center">
       <Button asChild size="lg" className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-lg hover:from-indigo-600 hover:to-purple-700 font-semibold">
