@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Bot, User, AlertTriangle } from 'lucide-react';
 
 // --- Configuration ---
 const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
@@ -8,7 +8,7 @@ const API_KEY = ""; // Provided by the Canvas environment
 // System prompt instructing the AI how to behave and what data to use (KSh pricing)
 const systemInstruction = {
   parts: [{
-    text: `You are the MaxDevs Assistant, a friendly and professional lead qualification bot. Your primary goal is to guide clients to the correct service package using the provided KSh pricing and detailed product information.
+    text: `You are Max, the friendly and professional lead qualification bot for MaxDevs. Your primary goal is to guide clients to the correct service package using the provided KSh pricing and detailed product information.
 
 ### CONVERSATIONAL RULES:
 1. **Initial Greeting:** Always start by warmly confirming the three main options: "New Website, Quick Update/Fix, or Complete Redesign." (This is already handled by initialBotMessage in the component).
@@ -44,7 +44,7 @@ const cn = (...classes) => {
 // Define a simple Button component using Tailwind classes
 const Button = ({ onClick, children, className, size = 'default', disabled = false }) => {
   const baseClasses = "rounded-xl font-semibold transition-all duration-200 shadow-md active:scale-[0.98]";
-  
+
   const sizeClasses = {
     default: "px-4 py-2 text-sm",
     icon: "w-10 h-10 flex items-center justify-center",
@@ -89,7 +89,7 @@ const Input = ({ value, onChange, onKeyPress, placeholder, className, type = 'te
 
 const getGeminiResponse = async (chatHistory) => {
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${API_KEY}`;
-  
+
   // Format history for the API (role: user/model)
   const contents = chatHistory.map(msg => ({
     role: msg.type === 'user' ? 'user' : 'model',
@@ -113,6 +113,14 @@ const getGeminiResponse = async (chatHistory) => {
       });
 
       if (!response.ok) {
+        const errorBody = await response.json();
+        console.error("API Call Response Error:", errorBody);
+
+        // Specific check for the 403 error from the API response (API Key issue)
+        if (errorBody.error?.code === 403) {
+             return "API Key Missing or Invalid. Please ensure the environment provides the necessary authentication.";
+        }
+
         throw new Error(`API error: ${response.statusText}`);
       }
 
@@ -127,8 +135,10 @@ const getGeminiResponse = async (chatHistory) => {
     } catch (error) {
       attempt++;
       if (attempt >= maxRetries) {
-        console.error("MaxDevs Bot: Max retries reached. API call failed.", error);
-        return "I'm currently unable to connect to our intelligent assistant. Please try again in a moment.";
+        console.error("Max Bot: Max retries reached. API call failed.", error);
+        return error.message.includes('API Key Missing')
+          ? error.message // Pass the specific API key error
+          : "I'm currently unable to connect to our intelligent assistant. Please try again in a moment.";
       }
       // Exponential backoff
       const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
@@ -140,21 +150,22 @@ const getGeminiResponse = async (chatHistory) => {
 
 // --- ChatBot Component ---
 
-export default function ChatBot() { // Changed to default export
+export default function ChatBot() {
   // Initial message is defined here
-  const initialBotMessage = "Welcome to MaxDevs! I can help you find the right solution. Do you need a **New Website**, a **Quick Update/Fix** for an existing site, or a **Complete Redesign**?";
-  
+  const initialBotMessage = "Hi, I'm **Max**, your assistant! Welcome to MaxDevs. I can help you find the right solution. Do you need a **New Website**, a **Quick Update/Fix** for an existing site, or a **Complete Redesign**?";
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { type: "bot", text: initialBotMessage, id: Date.now() },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [chatError, setChatError] = useState(null);
   const chatWindowRef = useRef(null);
 
   const handleSend = async () => {
     const userMessage = input.trim();
-    if (!userMessage || isLoading) return;
+    if (!userMessage || isLoading || chatError) return;
 
     // 1. Add user message
     setMessages((prev) => [...prev, { type: "user", text: userMessage, id: Date.now() }]);
@@ -167,14 +178,25 @@ export default function ChatBot() { // Changed to default export
         ...messages,
         { type: "user", text: userMessage, id: Date.now() }
       ];
-      
+
+      setChatError(null); // Clear previous errors before attempt
       const responseText = await getGeminiResponse(historyToSend);
-      
+
+      // Check for error messages returned as text (from getGeminiResponse)
+      if (responseText.includes("API Key Missing or Invalid") || responseText.includes("I'm currently unable to connect")) {
+          setChatError(responseText);
+          // Restore input for user to re-read, as the message wasn't processed by AI
+          setInput(userMessage);
+          return;
+      }
+
       // 3. Add bot response
       setMessages((prev) => [...prev, { type: "bot", text: responseText, id: Date.now() + 1 }]);
 
     } catch (error) {
-      setMessages((prev) => [...prev, { type: "bot", text: "I apologize, there was an unexpected error. Please try again.", id: Date.now() + 1 }]);
+      console.error("Critical Network/Fetch Error:", error);
+      setMessages((prev) => [...prev, { type: "bot", text: "A critical network error occurred. Please check your connection and try again.", id: Date.now() + 1 }]);
+      setChatError("A critical network error occurred. Check your console for details.");
     } finally {
       // 4. End loading
       setIsLoading(false);
@@ -220,7 +242,7 @@ export default function ChatBot() { // Changed to default export
         .text-secondary-foreground { color: var(--color-secondary-foreground); }
         .bg-accent { background-color: var(--color-accent); }
         .text-accent-foreground { color: var(--color-accent-foreground); }
-        
+
         /* Custom Pulse for Bot Button */
         @keyframes pulse-subtle {
           0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
@@ -232,7 +254,7 @@ export default function ChatBot() { // Changed to default export
         .shadow-3xl { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); }
         `}
       </style>
-      
+
       {/* Chat Button with subtle pulse effect when closed */}
       <button
         onClick={toggleChat}
@@ -251,36 +273,63 @@ export default function ChatBot() { // Changed to default export
         className={cn(
           "fixed bottom-24 right-6 z-50 w-[90vw] max-w-md bg-white border border-gray-200 rounded-xl shadow-3xl transition-all duration-300 overflow-hidden flex flex-col",
           // Responsiveness adjustment: move window up slightly on mobile
-          "sm:bottom-24 sm:right-6", 
-          "xs:bottom-16 xs:right-4", 
+          "sm:bottom-24 sm:right-6",
+          "xs:bottom-16 xs:right-4",
           isOpen ? "opacity-100 translate-y-0 h-[500px]" : "opacity-0 translate-y-4 pointer-events-none h-0"
         )}
       >
         <div className="p-4 border-b border-gray-100 bg-primary text-primary-foreground rounded-t-xl flex justify-between items-center">
-          <h3 className="font-bold text-lg">MaxDevs Assistant (AI)</h3>
+          <h3 className="font-bold text-lg">Max (AI Assistant)</h3>
           <button onClick={toggleChat} className="text-primary-foreground/80 hover:text-primary-foreground">
             <X size={20} />
           </button>
         </div>
 
         <div ref={chatWindowRef} id="chat-window" className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+          {/* Error Display Banner */}
+          {chatError && (
+            <div className="p-3 bg-red-100 text-red-700 rounded-lg border border-red-300 flex items-start">
+              <AlertTriangle size={18} className="mr-2 mt-0.5 flex-shrink-0" />
+              <div className='flex-1'>
+                 <strong>AI Connection Error:</strong> {chatError}
+              </div>
+            </div>
+          )}
+
           {messages.map((message) => (
             <div
               key={message.id}
               className={cn(
-                "p-3 rounded-xl max-w-[85%] text-sm shadow-md",
+                "p-3 rounded-xl max-w-[85%] text-sm shadow-md flex items-start",
                 message.type === "bot"
-                  ? "bg-secondary text-secondary-foreground rounded-tl-none"
-                  : "bg-accent text-accent-foreground ml-auto rounded-br-none"
+                  ? "bg-secondary text-secondary-foreground rounded-tl-none mr-auto"
+                  : "bg-accent text-accent-foreground ml-auto rounded-br-none flex-row-reverse" // Use flex-row-reverse for user messages
               )}
             >
-              {/* Render content, allowing markdown bolding */}
-              <p dangerouslySetInnerHTML={{ __html: message.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+              {/* Icon (always placed at the start/end of the flex row) */}
+              <div className={cn('flex-shrink-0', message.type === 'bot' ? 'mr-2' : 'ml-2', 'pt-1')}>
+                {message.type === 'bot' ? <Bot size={16} className="text-primary" /> : <User size={16} className="text-accent-foreground" />}
+              </div>
+
+              {/* Content Wrapper (Name + Message) */}
+              <div className='flex-1 flex flex-col'>
+                {/* Sender Name (Updated to Max) */}
+                <div className={cn(
+                    "text-xs font-semibold mb-1",
+                    message.type === 'bot' ? 'text-primary' : 'text-accent-foreground/90 text-right'
+                )}>
+                    {message.type === 'bot' ? 'Max' : 'Client'}
+                </div>
+
+                {/* Message Content */}
+                <p dangerouslySetInnerHTML={{ __html: message.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+              </div>
             </div>
           ))}
           {/* Typing Indicator */}
           {isLoading && (
-            <div className="p-3 rounded-xl max-w-[85%] text-sm shadow-md bg-secondary text-secondary-foreground rounded-tl-none">
+            <div className="p-3 rounded-xl max-w-[85%] text-sm shadow-md bg-secondary text-secondary-foreground rounded-tl-none flex items-center">
+              <Bot size={16} className="text-primary mr-2" />
               <LoadingDots />
             </div>
           )}
@@ -291,11 +340,16 @@ export default function ChatBot() { // Changed to default export
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleSend()}
-            placeholder={isLoading ? "Please wait for a response..." : "Ask MaxDevs a question..."}
+            placeholder={isLoading ? "Please wait for a response..." : (chatError ? "Cannot chat due to API error" : "Ask MaxDevs a question...")}
             className="flex-1 border-gray-300 focus:border-primary"
-            disabled={isLoading}
+            disabled={isLoading || !!chatError}
           />
-          <Button onClick={handleSend} size="icon" className="bg-primary hover:bg-primary/90" disabled={isLoading || !input.trim()}>
+          <Button
+            onClick={handleSend}
+            size="icon"
+            className="bg-primary hover:bg-primary/90"
+            disabled={isLoading || !input.trim() || !!chatError}
+          >
             {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
           </Button>
         </div>
