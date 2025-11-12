@@ -1,8 +1,3 @@
-import { useState } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
 
@@ -145,7 +140,7 @@ const getGeminiResponse = async (chatHistory) => {
 
 // --- ChatBot Component ---
 
-export const ChatBot = () => {
+export default function ChatBot() { // Changed to default export
   // Initial message is defined here
   const initialBotMessage = "Welcome to MaxDevs! I can help you find the right solution. Do you need a **New Website**, a **Quick Update/Fix** for an existing site, or a **Complete Redesign**?";
   
@@ -173,7 +168,6 @@ export const ChatBot = () => {
         { type: "user", text: userMessage, id: Date.now() }
       ];
       
-      // Filter out the initial user message that was just added from history, as it's included in the temporary historyToSend
       const responseText = await getGeminiResponse(historyToSend);
       
       // 3. Add bot response
@@ -308,5 +302,4 @@ export const ChatBot = () => {
       </div>
     </>
   );
-};
-
+}
