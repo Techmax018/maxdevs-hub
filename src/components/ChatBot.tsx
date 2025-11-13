@@ -1,262 +1,180 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { X, Send, MessageCircle } from 'lucide-react';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { ScrollArea } from './ui/scroll-area';
 
-// --- DEEPSEEK CONFIGURATION ---
-const SYSTEM_INSTRUCTION = `
-You are 'Max', a helpful and friendly chatbot for MaxDevs, a web development agency.
-Your role is to engage users in a conversation about their project ideas.
-Keep your responses concise, welcoming, and focused on gathering basic information (what they need, goal, and timeline).
-Your first message should be a friendly greeting and a soft question about their project.
-`;
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
-const API_KEY = "sk-431c45f9ba1e43c5a5a2d7980143837c"; // Replace with your DeepSeek API key
-const API_URL = "https://api.deepseek.com/v1/chat/completions";
+const packages = [
+  { name: 'Startup Package', price: '$1,800', description: '5 pages, mobile responsive, basic SEO' },
+  { name: 'Professional Package', price: '$4,500', description: '10 pages, advanced features, analytics' },
+  { name: 'Enterprise Package', price: 'Custom', description: 'Unlimited pages, e-commerce, custom features' }
+];
 
-// --- REACT COMPONENT ---
+export const ChatBot = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-const App = () => {
-    // New State for visibility: starts hidden
-    const [isOpen, setIsOpen] = useState(false);
-    
-    // Only essential chat state
-    const [messages, setMessages] = useState([]);
-    const [input, setInput] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    
-    // Ref for auto-scrolling
-    const messagesEndRef = useRef(null);
-    
-    // Auto-scroll effect
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
 
-    // Initial Greeting Effect (only triggers when the chat is opened for the first time)
-    useEffect(() => {
-        if (isOpen && messages.length === 0) {
-            setMessages([{ 
-                role: 'bot', 
-                text: "Hello! I'm Max from MaxDevs. How can I help you scope out your web project today?",
-            }]);
-        }
-    }, [isOpen]);
+  useEffect(() => {
+    if (isOpen && messages.length === 0) {
+      setMessages([{
+        role: 'assistant',
+        content: "Hi! I'm Max from MaxDevs. 👋 I'm here to help you with your web development project. What type of website or app are you looking to build?"
+      }]);
+    }
+  }, [isOpen, messages.length]);
 
-    const sendMessage = async () => {
-        const userMessage = input.trim();
-        if (!userMessage || isLoading) return;
+  const getSimulatedResponse = (userInput: string): string => {
+    const input = userInput.toLowerCase();
 
-        setError(null);
-        setIsLoading(true);
-        setInput('');
+    // Package related queries
+    if (input.includes('package') || input.includes('price') || input.includes('cost') || input.includes('pricing')) {
+      return `Great question! We offer three main packages:\n\n${packages.map(p => `• ${p.name} - ${p.price}\n  ${p.description}`).join('\n\n')}\n\nWhich package interests you most?`;
+    }
 
-        // 1. Add user message to chat history
-        setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
+    // Service inquiries
+    if (input.includes('service') || input.includes('what do you do') || input.includes('help with')) {
+      return "We specialize in:\n• Custom website development\n• E-commerce solutions\n• Website redesign & optimization\n• Responsive mobile-first design\n• SEO and performance optimization\n\nWhat type of project do you have in mind?";
+    }
 
-        // 2. Prepare DeepSeek API payload
-        const chatHistory = messages.map(msg => ({
-            role: msg.role === 'bot' ? 'assistant' : 'user',
-            content: msg.text
-        }));
+    // Timeline questions
+    if (input.includes('how long') || input.includes('timeline') || input.includes('time') || input.includes('when')) {
+      return "Typical timelines:\n• Startup Package: 2-3 weeks\n• Professional Package: 4-6 weeks\n• Enterprise Package: 6-12 weeks\n\nWe can discuss expedited options for urgent projects. Would you like to get started?";
+    }
 
-        // Add the new user message
-        chatHistory.push({ role: 'user', content: userMessage });
+    // Contact/quote related
+    if (input.includes('contact') || input.includes('quote') || input.includes('start') || input.includes('get started')) {
+      return "Perfect! I'd be happy to connect you with our team. You can:\n1. Fill out our contact form for a detailed quote\n2. Call us at +1 (555) 123-4567\n3. Email us at hello@maxdevs.com\n\nWould you like me to direct you to the quote form?";
+    }
 
-        const payload = {
-            model: "deepseek-chat", // or "deepseek-coder" for code-specific tasks
-            messages: [
-                { role: 'system', content: SYSTEM_INSTRUCTION },
-                ...chatHistory
-            ],
-            stream: false,
-            temperature: 0.7,
-            max_tokens: 1000
-        };
+    // Support questions
+    if (input.includes('support') || input.includes('help') || input.includes('issue') || input.includes('problem')) {
+      return "I'm here to help! Our support includes:\n• 24/7 emergency support for critical issues\n• 30-90 days post-launch bug fixes (depending on package)\n• Ongoing maintenance plans available\n\nWhat specific support do you need?";
+    }
 
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${API_KEY}`
-                },
-                body: JSON.stringify(payload)
-            });
+    // Portfolio/examples
+    if (input.includes('portfolio') || input.includes('example') || input.includes('work') || input.includes('previous')) {
+      return "We've delivered excellent results for our clients! Check out our portfolio to see:\n• 45% average reduction in bounce rates\n• 60% improvement in conversion rates\n• Award-winning designs\n\nVisit our Portfolio page to see detailed case studies. Would you like a specific type of example?";
+    }
 
-            if (!response.ok) {
-                const errorBody = await response.text();
-                throw new Error(`DeepSeek API call failed: ${response.status} - ${errorBody}`);
-            }
+    // About company
+    if (input.includes('about') || input.includes('who are you') || input.includes('company')) {
+      return "MaxDevs is a full-service web development agency focused on delivering results-driven solutions. We've helped dozens of businesses transform their online presence with modern, high-performance websites.\n\nOur team specializes in React, responsive design, and conversion optimization. What else would you like to know?";
+    }
 
-            const result = await response.json();
-            const botText = result.choices?.[0]?.message?.content;
+    // E-commerce specific
+    if (input.includes('ecommerce') || input.includes('e-commerce') || input.includes('shop') || input.includes('store')) {
+      return "We build powerful e-commerce solutions! Our Enterprise package includes:\n• Product catalog management\n• Secure payment processing\n• Inventory management\n• Shopping cart & checkout\n• Customer accounts\n\nWould you like to discuss your e-commerce needs?";
+    }
 
-            if (botText) {
-                // 3. Add bot message to chat history
-                setMessages(prev => [...prev, { role: 'bot', text: botText }]);
-            } else {
-                throw new Error('Received an empty response from DeepSeek.');
-            }
+    // Default response
+    return "Thanks for your message! I'd love to help you find the perfect solution for your project. Could you tell me more about:\n• What type of website you need\n• Your timeline\n• Your budget range\n\nOr feel free to ask about our packages, services, or anything else!";
+  };
 
-        } catch (err) {
-            console.error('DeepSeek API Error:', err);
-            setError('There was an issue connecting to DeepSeek. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const sendMessage = () => {
+    if (!input.trim()) return;
 
-    return (
-        <div className="font-inter">
-            <script src="https://cdn.tailwindcss.com"></script>
-            
-            {/* Floating Chat Bubble Icon */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className={`fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl transition-transform duration-300 transform 
-                            hover:scale-105 active:scale-100 text-white 
-                            ${isOpen ? 'bg-rose-500' : 'bg-teal-600 animate-pulse-subtle'}`}
-                aria-label={isOpen ? "Close Chat" : "Open Chat"}
-            >
-                {/* Icon logic: X when open, new Speech Bubble path when closed */}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    {isOpen ? (
-                        // Close (X) icon
-                        <>
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </>
-                    ) : (
-                        // Message Circle icon (updated with user's path)
-                        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
-                    )}
-                </svg>
-            </button>
-            
-            {/* Main Chatbot Container (Conditional Visibility & Blur Effect) */}
-            <div className={`
-                fixed bottom-[90px] right-6 z-40 
-                w-full max-w-sm sm:max-w-md bg-white/80 backdrop-blur-lg 
-                shadow-2xl rounded-xl flex flex-col 
-                h-[600px] transition-all duration-300 
-                ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 pointer-events-none'}
-            `}>
-                
-                {/* Header (Teal Background) */}
-                <div className="p-4 border-b border-gray-100 bg-teal-600 text-white rounded-t-xl">
-                    <h1 className="text-xl font-bold">Max AI Assistance</h1>
-                    <p className="text-teal-200 text-sm">Powered by DeepSeek</p>
-                </div>
+    const userMessage: Message = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
 
-                {/* Chat Messages Area */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {messages.map((msg, index) => (
-                        <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[85%] p-3 rounded-xl shadow-md ${
-                                msg.role === 'user' 
-                                    ? 'bg-sky-500 text-white rounded-br-none' // Sky Blue for User
-                                    : 'bg-gray-100 text-gray-800 rounded-tl-none' // Neutral for Bot
-                            }`}>
-                                <p className="whitespace-pre-wrap">{msg.text}</p>
-                            </div>
-                        </div>
-                    ))}
-                    {isLoading && (
-                        <div className="flex justify-start">
-                            <div className="max-w-[85%] p-3 rounded-xl shadow-md bg-gray-100 text-gray-800 rounded-tl-none">
-                                <div className="dot-flashing"></div>
-                            </div>
-                        </div>
-                    )}
-                    <div ref={messagesEndRef} />
-                </div>
+    // Simulate typing delay
+    setTimeout(() => {
+      const response = getSimulatedResponse(input);
+      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+    }, 500);
+  };
 
-                {/* Input and Error Area */}
-                <div className="p-4 border-t border-gray-100 bg-white/70 rounded-b-xl">
-                    {error && (
-                        <div className="p-2 mb-2 text-sm font-medium text-red-800 bg-red-100 rounded-lg">
-                            {error}
-                        </div>
-                    )}
-                    <div className="flex space-x-3">
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                            placeholder="Type your message..."
-                            className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150"
-                            disabled={isLoading}
-                        />
-                        <button
-                            onClick={sendMessage}
-                            className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 disabled:opacity-50"
-                            disabled={isLoading || !input.trim()}
-                        >
-                            {isLoading ? 'Send' : 'Send'}
-                        </button>
-                    </div>
-                </div>
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  return (
+    <>
+      {!isOpen && (
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90 z-50"
+          size="icon"
+        >
+          <MessageCircle className="h-6 w-6 text-white" />
+        </Button>
+      )}
+
+      {isOpen && (
+        <div className="fixed bottom-6 right-6 w-96 h-[600px] bg-background border border-border rounded-2xl shadow-2xl flex flex-col z-50 animate-scale-in">
+          <div className="bg-primary text-primary-foreground p-4 rounded-t-2xl flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-lg">Max - MaxDevs Assistant</h3>
+              <p className="text-sm opacity-90">Usually replies instantly</p>
             </div>
-            
-            {/* CSS for custom animations and font */}
-            <style>{`
-                /* Custom animation for the subtle pulse effect */
-                .animate-pulse-subtle {
-                    animation: pulse-subtle 2s ease-in-out infinite;
-                }
-                
-                @keyframes pulse-subtle {
-                    0%, 100% { transform: scale(1); }
-                    50% { transform: scale(1.05); }
-                }
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(false)}
+              className="text-primary-foreground hover:bg-primary-foreground/20"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
 
-                /* Existing loading animation and font styles */
-                .dot-flashing {
-                    position: relative;
-                    width: 6px;
-                    height: 6px;
-                    border-radius: 50%;
-                    background-color: #3f51b5;
-                    color: #3f51b5;
-                    animation: dotFlashing 1s infinite linear alternate;
-                    animation-delay: 0.5s;
-                }
-                .dot-flashing::before, .dot-flashing::after {
-                    content: '';
-                    display: inline-block;
-                    position: absolute;
-                    top: 0;
-                }
-                .dot-flashing::before {
-                    left: -9px;
-                    width: 6px;
-                    height: 6px;
-                    border-radius: 50%;
-                    background-color: #3f51b5;
-                    color: #3f51b5;
-                    animation: dotFlashing 1s infinite alternate;
-                    animation-delay: 0s;
-                }
-                .dot-flashing::after {
-                    left: 9px;
-                    width: 6px;
-                    height: 6px;
-                    border-radius: 50%;
-                    background-color: #3f51b5;
-                    color: #3f51b5;
-                    animation: dotFlashing 1s infinite alternate;
-                    animation-delay: 1s;
-                }
-                @keyframes dotFlashing {
-                    0% { opacity: 0; }
-                    50%, 100% { opacity: 1; }
-                }
-                .font-inter {
-                    font-family: 'Inter', sans-serif;
-                }
-            `}</style>
+          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+            <div className="space-y-4">
+              {messages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                      msg.role === 'user'
+                        ? 'bg-primary text-primary-foreground rounded-br-sm'
+                        : 'bg-muted text-foreground rounded-bl-sm'
+                    }`}
+                  >
+                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+
+          <div className="p-4 border-t border-border">
+            <div className="flex gap-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Type your message..."
+                className="flex-1"
+              />
+              <Button
+                onClick={sendMessage}
+                disabled={!input.trim()}
+                size="icon"
+                className="bg-primary hover:bg-primary/90"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
-    );
+      )}
+    </>
+  );
 };
-
-export default App;
