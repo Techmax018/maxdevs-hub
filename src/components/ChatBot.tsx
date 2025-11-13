@@ -54,13 +54,27 @@ export const ChatBot = () => {
 
       const assistantMessage = data.choices[0].message.content;
       setMessages([...newMessages, { role: 'assistant', content: assistantMessage }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
+      
+      let errorMessage = 'Failed to send message. Please try again.';
+      
+      // Extract error message from API response
+      if (error?.message) {
+        errorMessage = error.message;
+      }
+      
       toast({
-        title: 'Error',
-        description: 'Failed to send message. Please try again.',
+        title: 'Chat Error',
+        description: errorMessage,
         variant: 'destructive',
       });
+      
+      // Show error in chat
+      setMessages([...newMessages, { 
+        role: 'assistant', 
+        content: `⚠️ ${errorMessage}` 
+      }]);
     } finally {
       setIsLoading(false);
     }

@@ -62,7 +62,7 @@ Keep responses concise (2-3 sentences max), friendly, and focused. Guide the con
       if (response.status === 401) {
         throw new Error('Invalid OpenAI API key. Please check your OPENAI_API_KEY secret.');
       } else if (response.status === 429) {
-        throw new Error('OpenAI rate limit exceeded. Please try again later.');
+        throw new Error('Rate limit exceeded. Please ensure your OpenAI account has billing enabled and sufficient credits. Visit platform.openai.com to add payment method.');
       } else if (response.status === 500) {
         throw new Error('OpenAI service error. This may be due to an invalid API key or service issue. Please verify your API key.');
       }
