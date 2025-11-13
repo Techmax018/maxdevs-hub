@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import { Rocket, Users, Award, Clock } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
