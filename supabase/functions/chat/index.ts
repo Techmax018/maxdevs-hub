@@ -14,10 +14,16 @@ Deno.serve(async (req) => {
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 
     if (!OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY is not configured');
+      console.error('OPENAI_API_KEY is not configured');
+      throw new Error('OpenAI API key is not configured. Please add it in the secrets.');
     }
 
-    console.log('Received chat request with messages:', messages.length);
+    if (!messages || !Array.isArray(messages)) {
+      throw new Error('Invalid messages format');
+    }
+
+    console.log('Received chat request with', messages.length, 'messages');
+    console.log('Using API key starting with:', OPENAI_API_KEY.substring(0, 7) + '...');
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -52,6 +58,15 @@ Keep responses concise (2-3 sentences max), friendly, and focused. Guide the con
     if (!response.ok) {
       const errorText = await response.text();
       console.error('OpenAI API error:', response.status, errorText);
+      
+      if (response.status === 401) {
+        throw new Error('Invalid OpenAI API key. Please check your OPENAI_API_KEY secret.');
+      } else if (response.status === 429) {
+        throw new Error('OpenAI rate limit exceeded. Please try again later.');
+      } else if (response.status === 500) {
+        throw new Error('OpenAI service error. This may be due to an invalid API key or service issue. Please verify your API key.');
+      }
+      
       throw new Error(`OpenAI API error: ${response.status}`);
     }
 
