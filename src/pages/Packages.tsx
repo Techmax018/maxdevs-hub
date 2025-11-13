@@ -1,10 +1,16 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, AlertCircle } from "lucide-react";
 import Navigation from "@/components/Navigation";
 
 const Packages = () => {
+  const navigate = useNavigate();
+
+  const handleSelectPackage = (packageName: string, packagePrice: string) => {
+    navigate('/billing', { state: { packageName, packagePrice } });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -68,8 +74,11 @@ const Packages = () => {
                   </div>
                 </div>
 
-                <Button asChild className="w-full">
-                  <Link to="/contact">Select Starter</Link>
+                <Button 
+                  className="w-full"
+                  onClick={() => handleSelectPackage("Startup Package", "$1,800")}
+                >
+                  Select Starter
                 </Button>
               </CardContent>
             </Card>
@@ -119,8 +128,11 @@ const Packages = () => {
                   </div>
                 </div>
 
-                <Button asChild className="w-full">
-                  <Link to="/contact">Select Professional</Link>
+                <Button 
+                  className="w-full"
+                  onClick={() => handleSelectPackage("Professional Package", "$4,500")}
+                >
+                  Select Professional
                 </Button>
               </CardContent>
             </Card>
@@ -167,8 +179,12 @@ const Packages = () => {
                   </div>
                 </div>
 
-                <Button asChild variant="outline" className="w-full">
-                  <Link to="/contact">Request Free Quote</Link>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleSelectPackage("Enterprise Package", "Custom Quote")}
+                >
+                  Request Free Quote
                 </Button>
               </CardContent>
             </Card>
@@ -252,8 +268,12 @@ const Packages = () => {
                 </div>
               </div>
 
-              <Button asChild size="lg" className="w-full">
-                <Link to="/contact">Book Your Site Audit Now</Link>
+              <Button 
+                size="lg" 
+                className="w-full"
+                onClick={() => navigate('/contact')}
+              >
+                Book Your Site Audit Now
               </Button>
             </CardContent>
           </Card>
@@ -269,8 +289,11 @@ const Packages = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Schedule a free consultation and we'll help you choose the perfect solution for your business.
           </p>
-          <Button asChild size="lg">
-            <Link to="/contact">Get Free Consultation</Link>
+          <Button 
+            size="lg"
+            onClick={() => navigate('/contact')}
+          >
+            Get Free Consultation
           </Button>
         </div>
       </section>
