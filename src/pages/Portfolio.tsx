@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
