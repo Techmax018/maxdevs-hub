@@ -51,7 +51,7 @@ const Packages = () => {
               {/* Startup Package */}
               <div className="bg-card p-8 rounded-lg shadow-medium border-2 border-border">
                 <div className="text-sm font-semibold text-accent mb-2">🚀 STARTUP PACKAGE</div>
-                <h3 className="text-3xl font-bold mb-2">KSh 20,000</h3>
+                <h3 className="text-3xl font-bold mb-2">KSh 40,000</h3>
                 <p className="text-muted-foreground mb-6">
                   Perfect for solo entrepreneurs and basic informational sites
                 </p>
@@ -88,7 +88,7 @@ const Packages = () => {
                   MOST POPULAR
                 </div>
                 <div className="text-sm font-semibold text-accent mb-2">✨ PROFESSIONAL PACKAGE</div>
-                <h3 className="text-3xl font-bold mb-2">KSh 45,000</h3>
+                <h3 className="text-3xl font-bold mb-2">KSh 60,000</h3>
                 <p className="text-muted-foreground mb-6">
                   Ideal for growing SMBs requiring custom features
                 </p>
