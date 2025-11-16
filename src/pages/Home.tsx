@@ -113,7 +113,7 @@ const Home = () => {
               <CardContent className="pt-6 space-y-4">
                 <div className="text-4xl">🚀</div>
                 <h3 className="text-2xl font-bold">Startup Package</h3>
-                <p className="text-3xl font-bold text-primary">$1,800</p>
+                <p className="text-3xl font-bold text-primary">Ksh 40000</p>
                 <p className="text-muted-foreground">
                   Perfect for solo entrepreneurs and basic informational sites
                 </p>
@@ -136,7 +136,7 @@ const Home = () => {
                   MOST POPULAR
                 </div>
                 <h3 className="text-2xl font-bold">Professional Package</h3>
-                <p className="text-3xl font-bold text-primary">$4,500</p>
+                <p className="text-3xl font-bold text-primary">Ksh 60000</p>
                 <p className="text-muted-foreground">
                   Growing SMBs requiring custom features and robust CMS
                 </p>
