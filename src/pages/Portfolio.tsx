@@ -1,22 +1,20 @@
-
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
-=======
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, TrendingUp, Zap, Users, ShoppingCart } from "lucide-react";
 import Navigation from "@/components/Navigation";
->>>>>>> growth/main
+
 
 const Portfolio = () => {
   const projects = [
     {
-<<<<<<< HEAD
+
       title: "E-Commerce Fashion Store",
       service: "Enterprise Package",
       result: "150% increase in online sales",
@@ -71,7 +69,7 @@ const Portfolio = () => {
         "1,000+ email signups in first month",
       ],
     },
-=======
+
       id: 1,
       title: "Apex Logistics",
       service: "Full Rebrand & Web Development",
@@ -155,12 +153,12 @@ const Portfolio = () => {
         { label: "Time on Site", value: "Improved from 1:22 to 4:18" }
       ]
     }
->>>>>>> growth/main
+
   ];
 
   return (
     <div className="min-h-screen bg-background">
-<<<<<<< HEAD
+
       <Header />
       <ChatBot />
 
@@ -269,7 +267,7 @@ const Portfolio = () => {
       </div>
 
       <Footer />
-=======
+
       <Navigation />
       
       {/* Header Section */}
@@ -421,7 +419,7 @@ const Portfolio = () => {
           <p>© 2024 MaxDevs. All rights reserved.</p>
         </div>
       </footer>
->>>>>>> growth/main
+
     </div>
   );
 };
