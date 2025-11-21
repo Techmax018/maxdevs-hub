@@ -74,101 +74,116 @@ const Index = () => {
       </section>
 
       {/* Package Preview */}
-      <section className="py-20 px-4 bg-secondary">
-        <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-            Choose Your Package
-          </h2>
-          <p className="text-center text-muted-foreground mb-12 text-lg">
-            From startup websites to enterprise solutions
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Startup Package */}
-            <div className="bg-card p-8 rounded-lg shadow-medium border-2 border-border">
-              <div className="text-sm font-semibold text-accent mb-2">🚀 STARTUP</div>
-              <h3 className="text-2xl font-bold mb-4">KSh 20,000</h3>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">5 pages included</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">Mobile responsive</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">Basic SEO setup</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">30 days support</span>
-                </li>
-              </ul>
-              <Button asChild className="w-full bg-gradient-accent">
-                <Link to="/packages">Select Starter</Link>
-              </Button>
-            </div>
-
-            {/* Professional Package */}
-            <div className="bg-card p-8 rounded-lg shadow-large border-2 border-accent relative">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold">
-                POPULAR
+        <section className="mb-20">
+            <h2 className="text-3xl font-bold mb-8">Web Development Packages</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Startup Package */}
+              <div className="bg-card p-8 rounded-lg shadow-medium border-2 border-border">
+                <div className="text-sm font-semibold text-accent mb-2">🚀 STARTUP PACKAGE</div>
+                <h3 className="text-3xl font-bold mb-2">KSh 40,000</h3>
+                <p className="text-muted-foreground mb-6">
+                  Perfect for solo entrepreneurs and basic informational sites
+                </p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">5 pages (Home, About, Services, Contact, Privacy)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Mobile responsive design</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Basic SEO setup</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Contact forms</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">30 days post-launch bug fixes</span>
+                  </li>
+                </ul>
+                <Button onClick={() => openModal("Startup Package")} className="w-full bg-gradient-accent">
+                  Select Starter
+                </Button>
               </div>
-              <div className="text-sm font-semibold text-accent mb-2">✨ PROFESSIONAL</div>
-              <h3 className="text-2xl font-bold mb-4">KSh 45,000</h3>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">Up to 12 pages + Blog</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">CMS installation</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">Advanced SEO</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">60 days support</span>
-                </li>
-              </ul>
-              <Button asChild className="w-full bg-gradient-accent">
-                <Link to="/packages">Select Professional</Link>
-              </Button>
-            </div>
 
-            {/* Enterprise Package */}
-            <div className="bg-card p-8 rounded-lg shadow-medium border-2 border-border">
-              <div className="text-sm font-semibold text-accent mb-2">🌐 ENTERPRISE</div>
-              <h3 className="text-2xl font-bold mb-4">Custom Quote</h3>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">Unlimited pages</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">E-commerce & payments</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">Custom integrations</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span className="text-sm">90 days premium support</span>
-                </li>
-              </ul>
-              <Button asChild className="w-full" variant="secondary">
-                <Link to="/packages">Request Quote</Link>
-              </Button>
-            </div>
-          </div>
-          <div className="text-center mt-8">
-            <Link to="/packages" className="text-accent hover:underline font-medium">
+              {/* Professional Package */}
+              <div className="bg-card p-8 rounded-lg shadow-large border-2 border-accent relative">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold">
+                  MOST POPULAR
+                </div>
+                <div className="text-sm font-semibold text-accent mb-2">✨ PROFESSIONAL PACKAGE</div>
+                <h3 className="text-3xl font-bold mb-2">KSh 60,000</h3>
+                <p className="text-muted-foreground mb-6">
+                  Ideal for growing SMBs requiring custom features
+                </p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Up to 12 pages + Blog setup</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Dedicated CMS installation</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Advanced on-page SEO</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Content review & optimization</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">1 hour training session</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">60 days post-launch support</span>
+                  </li>
+                </ul>
+                <Button onClick={() => openModal("Professional Package")} className="w-full bg-gradient-accent">
+                  Select Professional
+                </Button>
+              </div>
+
+              {/* Enterprise Package */}
+              <div className="bg-card p-8 rounded-lg shadow-medium border-2 border-border">
+                <div className="text-sm font-semibold text-accent mb-2">🌐 ENTERPRISE/E-COMMERCE</div>
+                <h3 className="text-3xl font-bold mb-2">Custom Quote</h3>
+                <p className="text-muted-foreground mb-6">
+                  Starts at KSh 80,000 for complex functionality
+                </p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Custom page count based on complexity</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Custom database integration</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Payment gateway setup (Stripe, M-Pesa)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Advanced security audit</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">90 days premium support included</span>
+                  </li>
+                </ul>
+                <Button onClick={() => openModal("Enterprise Package")} className="w-full" variant="secondary">
+                  Request Free Quote
+                </Button>
               View all packages and pricing →
             </Link>
           </div>
