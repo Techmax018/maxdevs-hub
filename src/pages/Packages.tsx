@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,6 @@ const Packages = () => {
   const openModal = (packageName: string) => {
     setSelectedPackage(packageName);
     setIsModalOpen(true);
-=======
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,12 +24,10 @@ const Packages = () => {
 
   const handleSelectPackage = (packageName: string, packagePrice: string) => {
     navigate('/billing', { state: { packageName, packagePrice } });
->>>>>>> growth/main
   };
 
   return (
     <div className="min-h-screen bg-background">
-<<<<<<< HEAD
       <Header />
       <ChatBot />
 
@@ -323,7 +319,6 @@ const Packages = () => {
       />
 
       <Footer />
-=======
       <Navigation />
       
       {/* Header Section */}
@@ -615,7 +610,6 @@ const Packages = () => {
           <p>© 2024 MaxDevs. All rights reserved.</p>
         </div>
       </footer>
->>>>>>> growth/main
     </div>
   );
 };
