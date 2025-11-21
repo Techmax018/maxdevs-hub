@@ -10,7 +10,7 @@ const Billing = () => {
   const navigate = useNavigate();
   const [packageInfo, setPackageInfo] = useState({
     name: "Professional Package",
-    price: "$4,500"
+    price: "Ksh 60 000"
   });
 
   useEffect(() => {
