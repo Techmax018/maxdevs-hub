@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 
 import Home from "./pages/Home";
->>>>>>> growth/main
 import Packages from "./pages/Packages";
 import Portfolio from "./pages/Portfolio";
 import About from "./pages/About";
