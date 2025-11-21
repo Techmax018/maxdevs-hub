@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-<<<<<<< HEAD
+
 
 interface ImportMetaEnv {
   readonly GEMINI_BOT_API_KEY: string
@@ -9,5 +9,4 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }/// <reference types="vite/client" />
-=======
->>>>>>> growth/main
+
