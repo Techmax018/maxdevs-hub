@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+Import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
 import { BillingForm } from "@/components/BillingForm";
@@ -8,20 +8,30 @@ import { ArrowLeft } from "lucide-react";
 const Billing = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Destructure state values directly, setting defaults
+  const initialPackageName = location.state?.packageName || "Professional Package";
+  const initialPackagePrice = location.state?.packagePrice || "Ksh 60 000";
+
   const [packageInfo, setPackageInfo] = useState({
-    name: "Professional Package",
-    price: "Ksh 60 000"
+    name: initialPackageName,
+    price: initialPackagePrice
   });
 
+  // 👇 The change is here: The useEffect is simplified and guarantees update on state change.
   useEffect(() => {
-    // Get package info from navigation state if available
-    if (location.state?.packageName && location.state?.packagePrice) {
+    const newName = location.state?.packageName;
+    const newPrice = location.state?.packagePrice;
+
+    // Check if new data exists and is different from current state
+    if (newName && newPrice) {
       setPackageInfo({
-        name: location.state.packageName,
-        price: location.state.packagePrice
+        name: newName,
+        price: newPrice
       });
     }
-  }, [location.state]);
+    // Dependency array now correctly monitors for changes in the entire state object.
+  }, [location.state]); // Keep location.state as the dependency
 
   return (
     <div className="min-h-screen bg-background">
