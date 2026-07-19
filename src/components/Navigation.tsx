@@ -22,8 +22,13 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link to="/" className="text-xl md:text-2xl font-bold text-foreground">
-            Max<span className="text-primary">Devs</span>
+          <Link to="/" className="flex items-center gap-3 text-xl md:text-2xl font-bold text-foreground">
+            <img
+              src="/maxdevs-logo.png"
+              alt="MaxDevs logo"
+              className="h-10 w-10 md:h-12 md:w-12 rounded-full object-contain bg-white border border-slate-200"
+            />
+            <span>Max<span className="text-primary">Devs</span></span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -39,7 +44,7 @@ const Navigation = () => {
                 {link.label}
               </Link>
             ))}
-            <Button asChild size="sm">
+            <Button asChild size="sm" className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-400 hover:to-blue-500">
               <Link to="/contact">Get a Quote</Link>
             </Button>
           </div>
@@ -69,7 +74,7 @@ const Navigation = () => {
                 {link.label}
               </Link>
             ))}
-            <Button asChild className="w-full" size="sm">
+            <Button asChild className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-400 hover:to-blue-500" size="sm">
               <Link to="/contact" onClick={() => setIsOpen(false)}>
                 Get a Quote
               </Link>

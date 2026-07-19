@@ -11,12 +11,12 @@ interface Message {
 }
 
 const packages = [
-  { name: 'Startup Package', price: '$1,800', description: '5 pages, mobile responsive, basic SEO' },
-  { name: 'Professional Package', price: '$4,500', description: '10 pages, advanced features, analytics' },
-  { name: 'Enterprise Package', price: 'Custom', description: 'Unlimited pages, e-commerce, custom features' }
+  { name: 'Startup Package', price: 'KSh 40,000', description: '5 pages, mobile responsive, basic SEO' },
+  { name: 'Professional Package', price: 'KSh 60,000', description: '10 pages, advanced features, analytics' },
+  { name: 'Enterprise Package', price: 'Custom Quote', description: 'Unlimited pages, e-commerce, custom features' }
 ];
 
-export const ChatBot = () => {
+const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -164,3 +164,5 @@ export const ChatBot = () => {
     </>
   );
 };
+
+export default ChatBot;

@@ -6,12 +6,22 @@ const Footer = () => {
     <footer className="bg-primary text-primary-foreground py-12 mt-20">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="text-2xl font-bold mb-4">
-              Max<span className="text-accent">Devs</span>
-            </h3>
-            <p className="text-primary-foreground/80">
-              Professional web development with transparent pricing. Built for growth.
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-4">
+              <img
+                src="/maxdevs-logo.png"
+                alt="MaxDevs logo"
+                className="h-14 w-14 rounded-full border border-slate-200 bg-white object-contain"
+              />
+              <div>
+                <h3 className="text-2xl font-bold">
+                  Max<span className="text-accent">Devs</span>
+                </h3>
+                <p className="text-primary-foreground/80">Professional web development with transparent pricing.</p>
+              </div>
+            </div>
+            <p className="text-primary-foreground/70">
+              Built for growth with clear packages and local support.
             </p>
           </div>
 

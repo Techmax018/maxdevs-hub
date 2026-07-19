@@ -1,53 +1,26 @@
 import { useState } from "react";
-<<<<<<< HEAD
-import { Mail, Phone, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ChatBot from "@/components/ChatBot";
-
-const Contact = () => {
-  const { toast } = useToast();
-=======
+import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
-import Navigation from "@/components/Navigation";
 import { useToast } from "@/hooks/use-toast";
+import Navigation from "@/components/Navigation";
 import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
->>>>>>> growth/main
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-<<<<<<< HEAD
-    message: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "We'll get back to you within 24 hours.",
-    });
-    setFormData({ name: "", email: "", phone: "", message: "" });
-=======
     company: "",
     service: "",
     budget: "",
-    message: ""
+    message: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,8 +28,8 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('submit-form', {
-        body: formData
+      const { data, error } = await supabase.functions.invoke("submit-form", {
+        body: formData,
       });
 
       if (error) throw error;
@@ -73,10 +46,10 @@ const Contact = () => {
         company: "",
         service: "",
         budget: "",
-        message: ""
+        message: "",
       });
     } catch (error: any) {
-      console.error('Form submission error:', error);
+      console.error("Form submission error:", error);
       toast({
         title: "Submission Failed",
         description: error.message || "Please try again or contact us directly.",
@@ -88,161 +61,27 @@ const Contact = () => {
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
->>>>>>> growth/main
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
     <div className="min-h-screen bg-background">
-<<<<<<< HEAD
-      <Header />
-      <ChatBot />
-
-      <div className="pt-24 pb-20 px-4">
-        <div className="container mx-auto max-w-5xl">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
-            Get in Touch
-          </h1>
-          <p className="text-xl text-center text-muted-foreground mb-16">
-            Ready to start your project? We're here to help.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                    className="bg-background"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                    className="bg-background"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    required
-                    className="bg-background"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea
-                    id="message"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    rows={5}
-                    required
-                    className="bg-background"
-                  />
-                </div>
-                <Button type="submit" className="w-full bg-gradient-accent" size="lg">
-                  Get a Free Quote
-                </Button>
-              </form>
-            </div>
-
-            {/* Contact Info */}
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-accent/10 p-3 rounded-lg">
-                    <Mail className="w-6 h-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Email</h3>
-                    <p className="text-muted-foreground">UNDEOWRLDHACKER7@GMAIL.COM</p>
-                    <p className="text-muted-foreground">underwolrdhacker7@gmail.com</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-accent/10 p-3 rounded-lg">
-                    <Phone className="w-6 h-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Phone</h3>
-                    <p className="text-muted-foreground">+254 703 161 031</p>
-                    <p className="text-muted-foreground">+254 786 493 506</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-accent/10 p-3 rounded-lg">
-                    <MapPin className="w-6 h-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Location</h3>
-                    <p className="text-muted-foreground">
-                      Eldoret, Kenya<br />
-                      Kimumu
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-hero text-primary-foreground p-6 rounded-lg mt-8">
-                  <h3 className="font-semibold mb-2">Business Hours</h3>
-                  <p className="text-sm text-primary-foreground/90">
-                    Monday - Friday: 8:00 AM - 6:00 PM<br />
-                    Saturday: 9:00 AM - 2:00 PM<br />
-                    Sunday: Closed
-                  </p>
-                </div>
-
-                <div className="bg-accent/10 border border-accent/20 p-6 rounded-lg">
-                  <h3 className="font-semibold mb-2">Response Time</h3>
-                  <p className="text-sm text-muted-foreground">
-                    We typically respond to all inquiries within 24 hours during business days.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Footer />
-=======
       <Navigation />
-      
-      {/* Header Section */}
+
       <section className="pt-24 md:pt-32 pb-12 md:pb-16 px-4 bg-gradient-to-b from-muted/30 to-background">
         <div className="container mx-auto max-w-4xl text-center space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground">
             Get in <span className="text-primary">Touch</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Ready to start your project? Fill out the form below and we'll get back 
-            to you within 24 hours with a free consultation.
+            Ready to start your project? Fill out the form below and we'll get back to you within 24 hours with a free consultation.
           </p>
         </div>
       </section>
 
-      {/* Contact Form & Info */}
       <section className="py-12 md:py-16 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Contact Information */}
             <div className="space-y-6">
               <Card>
                 <CardContent className="pt-6 space-y-6">
@@ -272,7 +111,8 @@ const Contact = () => {
                         <div>
                           <p className="font-medium">Location</p>
                           <p className="text-muted-foreground">
-                            San Francisco, CA<br />
+                            San Francisco, CA
+                            <br />
                             United States
                           </p>
                         </div>
@@ -286,14 +126,12 @@ const Contact = () => {
                 <CardContent className="pt-6 space-y-3">
                   <h3 className="text-lg font-semibold">Quick Response Guarantee</h3>
                   <p className="text-sm opacity-90">
-                    We typically respond to all inquiries within 24 hours during business days. 
-                    For urgent matters, please call us directly.
+                    We typically respond to all inquiries within 24 hours during business days. For urgent matters, please call us directly.
                   </p>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Contact Form */}
             <div className="lg:col-span-2">
               <Card className="border-2">
                 <CardContent className="pt-6">
@@ -352,11 +190,11 @@ const Contact = () => {
                             <SelectValue placeholder="Select a service" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="startup">Startup Package ($1,800)</SelectItem>
-                            <SelectItem value="professional">Professional Package ($4,500)</SelectItem>
+                            <SelectItem value="startup">Startup Package (KSh 40,000)</SelectItem>
+                            <SelectItem value="professional">Professional Package (KSh 60,000)</SelectItem>
                             <SelectItem value="enterprise">Enterprise / E-commerce</SelectItem>
                             <SelectItem value="redesign">Website Redesign</SelectItem>
-                            <SelectItem value="audit">Site Audit Only ($599)</SelectItem>
+                            <SelectItem value="audit">Site Audit Only (KSh 59,900)</SelectItem>
                             <SelectItem value="other">Other / Not Sure</SelectItem>
                           </SelectContent>
                         </Select>
@@ -368,10 +206,10 @@ const Contact = () => {
                             <SelectValue placeholder="Select budget range" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="under-2k">Under $2,000</SelectItem>
-                            <SelectItem value="2k-5k">$2,000 - $5,000</SelectItem>
-                            <SelectItem value="5k-10k">$5,000 - $10,000</SelectItem>
-                            <SelectItem value="10k-plus">$10,000+</SelectItem>
+                            <SelectItem value="under-100k">Under KSh 100,000</SelectItem>
+                            <SelectItem value="100k-300k">KSh 100,000 - KSh 300,000</SelectItem>
+                            <SelectItem value="300k-500k">KSh 300,000 - KSh 500,000</SelectItem>
+                            <SelectItem value="500k-plus">KSh 500,000+</SelectItem>
                             <SelectItem value="flexible">Flexible</SelectItem>
                           </SelectContent>
                         </Select>
@@ -391,18 +229,11 @@ const Contact = () => {
                     </div>
 
                     <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                      {isSubmitting ? (
-                        "Sending..."
-                      ) : (
-                        <>
-                          Send Message <Send className="ml-2 h-4 w-4" />
-                        </>
-                      )}
+                      {isSubmitting ? "Sending..." : <>Send Message <Send className="ml-2 h-4 w-4" /></>}
                     </Button>
 
                     <p className="text-sm text-muted-foreground text-center">
-                      By submitting this form, you agree to our privacy policy. 
-                      We'll never share your information.
+                      By submitting this form, you agree to our privacy policy. We'll never share your information.
                     </p>
                   </form>
                 </CardContent>
@@ -412,20 +243,15 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
       <section className="py-16 md:py-24 px-4 bg-muted/20">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Frequently Asked Questions
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Frequently Asked Questions</h2>
           <div className="space-y-6">
             <Card>
               <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold mb-2">How long does a typical project take?</h3>
                 <p className="text-muted-foreground">
-                  The Startup Package typically takes 2-3 weeks, Professional Package 4-6 weeks, 
-                  and Enterprise projects 8-12 weeks depending on complexity. We'll provide a 
-                  detailed timeline during our initial consultation.
+                  The Startup Package typically takes 2-3 weeks, Professional Package 4-6 weeks, and Enterprise projects 8-12 weeks depending on complexity. We'll provide a detailed timeline during our initial consultation.
                 </p>
               </CardContent>
             </Card>
@@ -433,8 +259,7 @@ const Contact = () => {
               <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold mb-2">Do you offer payment plans?</h3>
                 <p className="text-muted-foreground">
-                  Yes! We typically structure payments as 50% upfront and 50% upon completion. 
-                  For larger enterprise projects, we can create custom payment milestones.
+                  Yes! We typically structure payments as 50% upfront and 50% upon completion. For larger enterprise projects, we can create custom payment milestones.
                 </p>
               </CardContent>
             </Card>
@@ -442,8 +267,7 @@ const Contact = () => {
               <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold mb-2">What if I need changes after launch?</h3>
                 <p className="text-muted-foreground">
-                  All packages include post-launch support (30-90 days depending on package). 
-                  After that period, we offer affordable maintenance plans or hourly support.
+                  All packages include post-launch support (30-90 days depending on package). After that period, we offer affordable maintenance plans or hourly support.
                 </p>
               </CardContent>
             </Card>
@@ -451,8 +275,7 @@ const Contact = () => {
               <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold mb-2">Can you help with content and copywriting?</h3>
                 <p className="text-muted-foreground">
-                  Yes! We offer content review and optimization as part of our Professional package, 
-                  and can provide full copywriting services as an add-on for any package.
+                  Yes! We offer content review and optimization as part of our Professional package, and can provide full copywriting services as an add-on for any package.
                 </p>
               </CardContent>
             </Card>
@@ -460,13 +283,18 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="py-8 px-4 border-t border-border">
-        <div className="container mx-auto text-center text-sm text-muted-foreground">
-          <p>© 2024 MaxDevs. All rights reserved.</p>
+        <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-4">
+            <img src="/maxdevs-logo.png" alt="MaxDevs logo" className="h-12 w-12 rounded-full border border-slate-200 bg-white object-contain" />
+            <div>
+              <p className="font-semibold text-foreground">MaxDevs</p>
+              <p>Professional site support and local expertise.</p>
+            </div>
+          </div>
+          <p>© {new Date().getFullYear()} MaxDevs. All rights reserved.</p>
         </div>
       </footer>
->>>>>>> growth/main
     </div>
   );
 };

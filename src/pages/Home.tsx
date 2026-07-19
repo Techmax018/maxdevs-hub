@@ -201,8 +201,15 @@ const Home = () => {
 
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-border">
-        <div className="container mx-auto text-center text-sm text-muted-foreground">
-          <p>© 2024 MaxDevs. All rights reserved.</p>
+        <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-4">
+            <img src="/maxdevs-logo.png" alt="MaxDevs logo" className="h-12 w-12 rounded-full border border-slate-200 bg-white object-contain" />
+            <div>
+              <p className="font-semibold text-foreground">MaxDevs</p>
+              <p>Web development with reliable support.</p>
+            </div>
+          </div>
+          <p>© {new Date().getFullYear()} MaxDevs. All rights reserved.</p>
         </div>
       </footer>
     </div>
