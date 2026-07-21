@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-// https://vitejs.dev/config/
 export default defineConfig(() => ({
   server: {
     host: "::",
@@ -27,4 +26,15 @@ export default defineConfig(() => ({
       }
     }
   }
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor'; // Keeps everything from node_modules together
+          }
+        },
+      },
+    },
+  },
 }));
