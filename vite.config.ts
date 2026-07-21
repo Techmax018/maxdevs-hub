@@ -19,17 +19,8 @@ export default defineConfig(() => ({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // Keep React and all UI/framework libraries that rely on React together
-            if (
-              id.includes('react') || 
-              id.includes('radix-ui') || 
-              id.includes('tanstack')
-            ) {
-              return 'vendor-react';
-            }
-            if (id.includes('lucide') || id.includes('chart.js')) {
-              return 'vendor-ui';
-            }
+            if (id.includes('react')) return 'vendor-react';
+            if (id.includes('lucide') || id.includes('chart.js')) return 'vendor-ui';
             return 'vendor';
           }
         }
