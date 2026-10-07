@@ -9,14 +9,16 @@ const Footer = () => {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-4">
               <img
-                src="/maxdevs-logo.png"
+                src="/logo2.jpeg"
                 alt="MaxDevs logo"
                 className="h-14 w-14 rounded-full border border-slate-200 bg-white object-contain"
               />
               <div>
-                <h3 className="text-2xl font-bold">
-                  Max<span className="text-accent">Devs</span>
-                </h3>
+                <img
+                  src="/logo1.jpeg"
+                  alt="MaxDevs"
+                  className="h-10 object-contain"
+                />
                 <p className="text-primary-foreground/80">Professional web development with transparent pricing.</p>
               </div>
             </div>

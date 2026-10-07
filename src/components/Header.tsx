@@ -19,7 +19,12 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-soft">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-primary">
+          <Link to="/" className="flex items-center gap-3 text-2xl font-bold text-primary">
+            <img
+              src="/logo2.jpeg"
+              alt="MaxDevs logo"
+              className="h-10 w-10 md:h-12 md:w-12 rounded-full object-contain bg-white border border-slate-200"
+            />
             Max<span className="text-accent">Devs</span>
           </Link>
 

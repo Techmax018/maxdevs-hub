@@ -24,7 +24,7 @@ const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 text-xl md:text-2xl font-bold text-foreground">
             <img
-              src="/maxdevs-logo.png"
+              src="/logo2.jpeg"
               alt="MaxDevs logo"
               className="h-10 w-10 md:h-12 md:w-12 rounded-full object-contain bg-white border border-slate-200"
             />
