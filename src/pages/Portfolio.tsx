@@ -63,7 +63,7 @@ const Portfolio = () => {
       service: "Portfolio Website",
       keyResult: "Modern personal branding online",
       description: "Portfolio website showcasing services, work, and contact options",
-      url: "https://maxdevwebsite.vercel.app/",
+      url: "https://maxdevswebsite.vercel.app/",
            preview: "/previews/maxdevs%20portifolio.png",
       icon: Zap,
       challenge:
