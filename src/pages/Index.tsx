@@ -11,21 +11,26 @@ const Index = () => {
       <Navigation />
       <ChatBot />
 
-      <section className="pt-24 md:pt-32 pb-20 px-4 text-slate-900 relative bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.18),transparent_30%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.14),transparent_24%),linear-gradient(180deg,#ffffff,#eff6ff)]">
+      <section
+        className="pt-24 md:pt-32 pb-20 px-4 text-white relative bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/hero.jpeg')" }}
+      >
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-black/60" />
         <div className="container mx-auto text-center relative z-10">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span className="text-gray-800">Professional</span>{" "}
-            <span className="text-indigo-600">Websites.</span>
+            <span className="text-white">Professional</span>{" "}
+            <span className="text-cyan-400">Websites.</span>
             <br />
-            <span className="text-gray-800">Transparent</span>{" "}
-            <span className="text-pink-500">Prices.</span>
+            <span className="text-white">Transparent</span>{" "}
+            <span className="text-pink-400">Prices.</span>
             <br />
-            <span className="text-gray-800">Built for</span>{" "}
-            <span className="text-green-500">Mobile.</span>
+            <span className="text-white">Built for</span>{" "}
+            <span className="text-green-400">Mobile.</span>
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-700 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto">
             Grow your business online with fixed-scope web development packages starting at{" "}
-            <span className="text-red-500 font-bold text-xl">KSh 40,000</span>
+            <span className="text-red-400 font-bold text-xl">KSh 40,000</span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-lg hover:from-cyan-400 hover:to-blue-500 font-semibold">
