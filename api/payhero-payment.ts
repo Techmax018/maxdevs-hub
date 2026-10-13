@@ -1,15 +1,16 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import { Pool } from "pg";
 
-// Lazily create pool inside the handler so env vars are resolved at runtime
 let pool: Pool | null = null;
 function getPool(): Pool {
   if (!pool) {
-    pool = new Pool({
-      connectionString: process.env.POSTGRES_URL_NON_POOLING ?? process.env.POSTGRES_URL,
-      ssl: { rejectUnauthorized: false },
-      connectionTimeoutMillis: 10000,
-    });
+    const connString =
+      process.env.POSTGRES_URL_NON_POOLING ??
+      process.env.POSTGRES_URL ?? "";
+    const url = connString.includes("sslmode=")
+      ? connString.replace(/sslmode=[^&]+/, "sslmode=no-verify")
+      : connString + (connString.includes("?") ? "&" : "?") + "sslmode=no-verify";
+    pool = new Pool({ connectionString: url, connectionTimeoutMillis: 10000 });
   }
   return pool;
 }

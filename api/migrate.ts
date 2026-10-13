@@ -1,10 +1,20 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import { Pool } from "pg";
 
+function makePool(connString: string): Pool {
+  // Supabase uses a self-signed cert chain on the pooler endpoint.
+  // The only reliable fix on Vercel is to strip any existing sslmode
+  // param and force sslmode=no-verify in the connection string itself.
+  const url = connString.includes("sslmode=")
+    ? connString.replace(/sslmode=[^&]+/, "sslmode=no-verify")
+    : connString + (connString.includes("?") ? "&" : "?") + "sslmode=no-verify";
+
+  return new Pool({ connectionString: url, connectionTimeoutMillis: 10000 });
+}
+
 export default async function handler(_req: IncomingMessage, res: ServerResponse) {
   res.setHeader("Content-Type", "application/json");
 
-  // Use non-pooling URL for DDL migrations (Prisma/pgbouncer URL breaks CREATE TABLE)
   const connString =
     process.env.POSTGRES_URL_NON_POOLING ??
     process.env.POSTGRES_URL ??
@@ -15,29 +25,26 @@ export default async function handler(_req: IncomingMessage, res: ServerResponse
     res.end(
       JSON.stringify({
         ok: false,
-        error: "No Postgres connection string found. Set POSTGRES_URL_NON_POOLING in Vercel environment variables.",
-        available_env_keys: Object.keys(process.env).filter((k) =>
-          k.toLowerCase().includes("postgres") || k.toLowerCase().includes("database")
+        error:
+          "No Postgres connection string found. Add POSTGRES_URL_NON_POOLING to Vercel environment variables.",
+        available_env_keys: Object.keys(process.env).filter(
+          (k) =>
+            k.toLowerCase().includes("postgres") ||
+            k.toLowerCase().includes("database"),
         ),
-      })
+      }),
     );
     return;
   }
 
-  const pool = new Pool({
-    connectionString: connString,
-    ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 10000,
-  });
+  const pool = makePool(connString);
 
-  const client = await pool.connect().catch((err: Error) => {
-    return { error: err.message };
-  });
+  const client = await pool.connect().catch((err: Error) => ({ error: err.message }));
 
   if ("error" in client) {
+    await pool.end();
     res.statusCode = 500;
     res.end(JSON.stringify({ ok: false, error: `DB connect failed: ${client.error}` }));
-    await pool.end();
     return;
   }
 
