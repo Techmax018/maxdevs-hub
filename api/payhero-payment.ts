@@ -1,10 +1,18 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import { Pool } from "pg";
 
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-  ssl: { rejectUnauthorized: false },
-});
+// Lazily create pool inside the handler so env vars are resolved at runtime
+let pool: Pool | null = null;
+function getPool(): Pool {
+  if (!pool) {
+    pool = new Pool({
+      connectionString: process.env.POSTGRES_URL_NON_POOLING ?? process.env.POSTGRES_URL,
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 10000,
+    });
+  }
+  return pool;
+}
 
 const PAYHERO_API_URL = "https://backend.payhero.co.ke/api/v2/payments";
 
@@ -73,7 +81,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   }
 
   // Insert pending order into Postgres
-  const client = await pool.connect();
+  const client = await getPool().connect();
   let orderId: string;
   try {
     const result = await client.query<{ id: string }>(
@@ -118,7 +126,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   const payheroData = (await payheroRes.json()) as { reference?: string };
 
   if (payheroData.reference) {
-    await pool.query(
+    await getPool().query(
       `UPDATE orders SET payhero_reference = $1 WHERE id = $2`,
       [payheroData.reference, orderId],
     );

@@ -1,10 +1,17 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import { Pool } from "pg";
 
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-  ssl: { rejectUnauthorized: false },
-});
+let pool: Pool | null = null;
+function getPool(): Pool {
+  if (!pool) {
+    pool = new Pool({
+      connectionString: process.env.POSTGRES_URL_NON_POOLING ?? process.env.POSTGRES_URL,
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 10000,
+    });
+  }
+  return pool;
+}
 
 async function readBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -40,7 +47,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     return;
   }
 
-  const client = await pool.connect();
+  const client = await getPool().connect();
   try {
     const result = await client.query<{ status: string }>(
       `SELECT status FROM orders WHERE id = $1`,
