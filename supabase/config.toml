@@ -5,3 +5,12 @@ verify_jwt = false
 
 [functions.submit-form]
 verify_jwt = false
+
+[functions.payhero-payment]
+verify_jwt = false
+
+[functions.payhero-payment-status]
+verify_jwt = false
+
+[functions.payhero-callback]
+verify_jwt = false

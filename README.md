@@ -24,7 +24,7 @@ This repository is intended for local development, deployment as a static fronte
 ## Features
 
 - Responsive agency landing page with package pricing and portfolio case studies
-- Package selection and checkout flow using React Router state
+- Package selection and M-Pesa checkout flow powered by PayHero
 - Contact form that submits via Supabase Edge Function
 - Simulated chat assistant component for user engagement
 - Shadcn UI components and Tailwind CSS styling
@@ -103,6 +103,14 @@ GOOGLE_SHEETS_WEBHOOK_URL=https://your-webhook-url
 
 > Note: The frontend uses `VITE_` prefixed variables. Edge functions should use standard environment names configured via Supabase.
 
+PayHero credentials must be stored only as Supabase Edge Function secrets. Never add them to frontend `VITE_` variables or commit them:
+
+```sh
+supabase secrets set PAYHERO_BASIC_AUTH_TOKEN="Basic your_rotated_token" PAYHERO_CHANNEL_ID="your_channel_id"
+```
+
+`PAYHERO_CALLBACK_URL` is optional; by default, the payment function uses the deployed Supabase `payhero-callback` URL.
+
 ## Available Scripts
 
 - `npm run dev` — start Vite development server
@@ -118,7 +126,7 @@ GOOGLE_SHEETS_WEBHOOK_URL=https://your-webhook-url
 - `/portfolio` — Portfolio case studies and examples
 - `/about` — About MaxDevs and process overview
 - `/contact` — Contact form with Supabase function submission
-- `/billing` — Checkout-style page for selected package
+- `/billing` — M-Pesa STK Push checkout for the Startup and Professional packages
 - `*` — 404 Not Found
 
 ## Core Integrations
@@ -134,8 +142,12 @@ GOOGLE_SHEETS_WEBHOOK_URL=https://your-webhook-url
 
 ### Billing Flow
 
-- `src/pages/Billing.tsx` — reads package data from router state and renders `BillingForm`
-- `src/components/BillingForm.tsx` — collects payment-style data and shows a simulated success toast
+- `src/pages/Billing.tsx` — renders the selected fixed-price package
+- `src/components/BillingForm.tsx` — collects the customer's name and M-Pesa phone number, starts an STK prompt, and polls for the confirmed result
+- `supabase/functions/payhero-payment/` — validates the package and Kenyan phone number, then creates an STK Push request using server-side PayHero credentials
+- `supabase/functions/payhero-payment-status/` — checks the PayHero transaction status without trusting client-submitted payment results
+- `supabase/functions/payhero-callback/` — verifies PayHero callbacks against the transaction status API
+- `supabase/migrations/20261013000000_create_payment_orders.sql` — stores order and payment status with row-level security enabled
 
 ## Supabase Functions
 
@@ -148,6 +160,12 @@ GOOGLE_SHEETS_WEBHOOK_URL=https://your-webhook-url
 - `supabase/functions/chat/index.ts`
   - Example edge function for chat responses
   - Returns canned chat replies based on message content
+- `supabase/functions/payhero-payment/index.ts`
+  - Starts PayHero M-Pesa STK Push requests for the fixed-price packages
+- `supabase/functions/payhero-payment-status/index.ts`
+  - Looks up transaction status directly with PayHero
+- `supabase/functions/payhero-callback/index.ts`
+  - Receives callbacks and verifies the transaction with PayHero before updating its status
 
 ## Deployment
 
@@ -162,6 +180,17 @@ npm run build
 ```
 
 2. Deploy the contents of `dist/` to your static host.
+3. Link the Supabase CLI to your project, apply the migration, and deploy the payment functions:
+
+```sh
+supabase link --project-ref sbtwgydsvqohviconcvt
+supabase db push
+supabase functions deploy payhero-payment
+supabase functions deploy payhero-payment-status
+supabase functions deploy payhero-callback
+```
+
+4. Add the `PAYHERO_BASIC_AUTH_TOKEN` and `PAYHERO_CHANNEL_ID` secrets in Supabase. In PayHero, use the matching registered payment channel and rotate any API credential that has been exposed.
 
 ### Supabase Functions
 
@@ -175,7 +204,7 @@ Additional documentation is available in `docs/README.md`.
 
 ## Notes
 
-- The billing form is a demo flow and does not integrate with a real payment gateway.
+- The billing flow requires the Supabase migration and PayHero Edge Function secrets to be deployed before customers can make live payments. It currently supports M-Pesa for the Startup and Professional package prices; custom-priced work continues through the contact form.
 - The chat assistant uses scripted responses, not a live AI backend.
 - The contact form requires Supabase Edge Function deployment to send email and log submissions.
 - Replace the placeholder contact details and logos with your own branded values.

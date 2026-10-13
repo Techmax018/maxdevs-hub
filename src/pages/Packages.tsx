@@ -11,8 +11,8 @@ const Packages = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState("");
 
-  const handleSelectPackage = (packageName: string, packagePrice: string) => {
-    navigate("/billing", { state: { packageName, packagePrice } });
+  const handleSelectPackage = (packageId: string, packageName: string, packagePrice: string) => {
+    navigate("/billing", { state: { packageId, packageName, packagePrice } });
   };
 
   const openModal = (packageName: string) => {
@@ -75,7 +75,7 @@ const Packages = () => {
                   </div>
                 </div>
 
-                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => handleSelectPackage("Startup Package", "KSh 40,000")}>Select Starter</Button>
+                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => handleSelectPackage("startup", "Startup Package", "KSh 40,000")}>Select Starter</Button>
               </CardContent>
             </Card>
 
@@ -121,7 +121,7 @@ const Packages = () => {
                   </div>
                 </div>
 
-                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => handleSelectPackage("Professional Package", "KSh 60,000")}>Select Professional</Button>
+                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => handleSelectPackage("professional", "Professional Package", "KSh 60,000")}>Select Professional</Button>
               </CardContent>
             </Card>
 
@@ -160,7 +160,7 @@ const Packages = () => {
                   </div>
                 </div>
 
-                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => handleSelectPackage("Enterprise Package", "Custom Quote")}>Request Free Quote</Button>
+                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => navigate("/contact")}>Request Free Quote</Button>
               </CardContent>
             </Card>
           </div>

@@ -1,61 +1,125 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Lock } from "lucide-react";
+import { CheckCircle2, CreditCard, LoaderCircle, Smartphone } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface BillingFormProps {
+  packageId: string;
   packageName: string;
   packagePrice: string;
 }
 
-export const BillingForm = ({ packageName, packagePrice }: BillingFormProps) => {
-  const { toast } = useToast();
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [billingData, setBillingData] = useState({
-    cardName: "",
-    cardNumber: "",
-    expiry: "",
-    cvv: "",
-    billingAddress: "",
-    city: "",
-    zipCode: "",
-    country: ""
-  });
+type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed";
 
-  const handleChange = (field: string, value: string) => {
-    setBillingData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const formatCardNumber = (value: string) => {
-    const cleaned = value.replace(/\s/g, '');
-    const match = cleaned.match(/.{1,4}/g);
-    return match ? match.join(' ') : cleaned;
-  };
-
-  const formatExpiry = (value: string) => {
-    const cleaned = value.replace(/\D/g, '');
-    if (cleaned.length >= 2) {
-      return cleaned.substring(0, 2) + '/' + cleaned.substring(2, 4);
+const getFunctionErrorMessage = async (error: unknown, fallback: string) => {
+  if (error && typeof error === "object" && "context" in error && error.context instanceof Response) {
+    try {
+      const body: unknown = await error.context.clone().json();
+      if (body && typeof body === "object" && "error" in body && typeof body.error === "string") {
+        return body.error;
+      }
+    } catch (parseError) {
+      console.error("Unable to read the payment service error response:", parseError);
     }
-    return cleaned;
-  };
+  }
+  return fallback;
+};
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsProcessing(true);
+export const BillingForm = ({ packageId, packageName, packagePrice }: BillingFormProps) => {
+  const { toast } = useToast();
+  const [customerName, setCustomerName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [status, setStatus] = useState<PaymentStatus>("idle");
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [statusError, setStatusError] = useState<string | null>(null);
 
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
+  useEffect(() => {
+    if (status !== "pending" || !orderId) return;
 
-    toast({
-      title: "Payment Processing",
-      description: "Your payment is being processed. We'll send you a confirmation email shortly.",
-    });
+    let checking = false;
+    const checkPayment = async () => {
+      if (checking) return;
+      checking = true;
 
-    setIsProcessing(false);
+      try {
+        const { data, error } = await supabase.functions.invoke("payhero-payment-status", {
+          body: { orderId },
+        });
+
+        if (error) throw error;
+        if (!data || !["pending", "success", "failed"].includes(data.status)) {
+          throw new Error("PayHero returned an unrecognized payment status.");
+        }
+
+        setStatusError(null);
+        if (data.status === "success") {
+          setStatus("success");
+          toast({
+            title: "Payment received",
+            description: `Your ${packageName} payment was confirmed.`,
+          });
+        } else if (data.status === "failed") {
+          setStatus("failed");
+          toast({
+            title: "Payment was not completed",
+            description: "You can try again with the same package.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Unable to check PayHero payment status:", error);
+        setStatusError(
+          await getFunctionErrorMessage(error, "We couldn't check the payment status. We'll keep trying automatically."),
+        );
+      } finally {
+        checking = false;
+      }
+    };
+
+    void checkPayment();
+    const intervalId = window.setInterval(() => void checkPayment(), 5000);
+    return () => window.clearInterval(intervalId);
+  }, [orderId, packageName, status, toast]);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setStatus("initiating");
+    setStatusError(null);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("payhero-payment", {
+        body: {
+          packageId,
+          customerName: customerName.trim(),
+          phoneNumber: phoneNumber.trim(),
+        },
+      });
+
+      if (error) throw error;
+      if (!data?.orderId) throw new Error("The payment service did not return an order reference.");
+
+      setOrderId(data.orderId);
+      setStatus("pending");
+      toast({
+        title: "M-Pesa prompt sent",
+        description: "Check your phone and enter your M-Pesa PIN to complete payment.",
+      });
+    } catch (error) {
+      console.error("Unable to start PayHero payment:", error);
+      setStatus("idle");
+      toast({
+        title: "Couldn't start payment",
+        description: await getFunctionErrorMessage(
+          error,
+          "Please check your details and try again. If this continues, contact us.",
+        ),
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -63,9 +127,9 @@ export const BillingForm = ({ packageName, packagePrice }: BillingFormProps) => 
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CreditCard className="h-5 w-5 text-primary" />
-          Billing Information
+          M-Pesa Checkout
         </CardTitle>
-        <div className="pt-2 flex justify-between items-center">
+        <div className="flex items-center justify-between pt-2">
           <div>
             <p className="text-sm text-muted-foreground">Selected Package</p>
             <p className="font-semibold">{packageName}</p>
@@ -77,127 +141,92 @@ export const BillingForm = ({ packageName, packagePrice }: BillingFormProps) => 
         </div>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Card Information */}
-          <div className="space-y-4">
-            <h3 className="font-semibold flex items-center gap-2">
-              <Lock className="h-4 w-4 text-primary" />
-              Secure Payment Details
-            </h3>
-            
-            <div className="space-y-2">
-              <Label htmlFor="cardName">Cardholder Name *</Label>
-              <Input
-                id="cardName"
-                required
-                value={billingData.cardName}
-                onChange={(e) => handleChange("cardName", e.target.value)}
-                placeholder="John Smith"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="cardNumber">Card Number *</Label>
-              <Input
-                id="cardNumber"
-                required
-                value={billingData.cardNumber}
-                onChange={(e) => handleChange("cardNumber", formatCardNumber(e.target.value))}
-                placeholder="1234 5678 9012 3456"
-                maxLength={19}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="expiry">Expiry Date *</Label>
-                <Input
-                  id="expiry"
-                  required
-                  value={billingData.expiry}
-                  onChange={(e) => handleChange("expiry", formatExpiry(e.target.value))}
-                  placeholder="MM/YY"
-                  maxLength={5}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="cvv">CVV *</Label>
-                <Input
-                  id="cvv"
-                  required
-                  type="password"
-                  value={billingData.cvv}
-                  onChange={(e) => handleChange("cvv", e.target.value.replace(/\D/g, ''))}
-                  placeholder="123"
-                  maxLength={4}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Billing Address */}
-          <div className="space-y-4 pt-4 border-t">
-            <h3 className="font-semibold">Billing Address</h3>
-            
-            <div className="space-y-2">
-              <Label htmlFor="billingAddress">Street Address *</Label>
-              <Input
-                id="billingAddress"
-                required
-                value={billingData.billingAddress}
-                onChange={(e) => handleChange("billingAddress", e.target.value)}
-                placeholder="123 Main Street"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="city">City *</Label>
-                <Input
-                  id="city"
-                  required
-                  value={billingData.city}
-                  onChange={(e) => handleChange("city", e.target.value)}
-                  placeholder="San Francisco"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="zipCode">ZIP Code *</Label>
-                <Input
-                  id="zipCode"
-                  required
-                  value={billingData.zipCode}
-                  onChange={(e) => handleChange("zipCode", e.target.value)}
-                  placeholder="94102"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="country">Country *</Label>
-              <Input
-                id="country"
-                required
-                value={billingData.country}
-                onChange={(e) => handleChange("country", e.target.value)}
-                placeholder="United States"
-              />
-            </div>
-          </div>
-
-          <div className="pt-4">
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={isProcessing}
-            >
-              {isProcessing ? "Processing..." : `Pay ${packagePrice}`}
-            </Button>
-            <p className="text-xs text-center text-muted-foreground mt-2">
-              🔒 Your payment information is secure and encrypted
+        {status === "success" ? (
+          <div className="space-y-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-5 text-center" role="status">
+            <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-600" />
+            <h2 className="text-lg font-semibold">Payment confirmed</h2>
+            <p className="text-sm text-muted-foreground">
+              Thank you. We have received your payment for the {packageName}.
             </p>
           </div>
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <p className="text-sm text-muted-foreground">
+              Enter your details and PayHero will send an M-Pesa STK prompt to your phone. Approve it using your M-Pesa PIN.
+            </p>
+
+            <div className="space-y-2">
+              <Label htmlFor="customerName">Full name</Label>
+              <Input
+                id="customerName"
+                autoComplete="name"
+                required
+                maxLength={100}
+                value={customerName}
+                onChange={(event) => setCustomerName(event.target.value)}
+                placeholder="Your name"
+                disabled={status === "initiating" || status === "pending"}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phoneNumber">M-Pesa phone number</Label>
+              <Input
+                id="phoneNumber"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                required
+                maxLength={20}
+                value={phoneNumber}
+                onChange={(event) => setPhoneNumber(event.target.value)}
+                placeholder="0712 345 678"
+                disabled={status === "initiating" || status === "pending"}
+              />
+              <p className="text-xs text-muted-foreground">
+                Use a Kenyan M-Pesa number, for example 0712 345 678 or +254 712 345 678.
+              </p>
+            </div>
+
+            {status === "pending" && (
+              <div className="space-y-2 rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm" role="status" aria-live="polite">
+                <div className="flex items-center gap-2 font-medium">
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                  Waiting for M-Pesa confirmation
+                </div>
+                <p className="text-muted-foreground">
+                  Approve the payment prompt on your phone. This page will update when PayHero confirms the result.
+                </p>
+                {statusError && <p className="text-destructive">{statusError}</p>}
+              </div>
+            )}
+
+            {status === "failed" && (
+              <p className="text-sm text-destructive" role="alert">
+                The payment was declined or cancelled. You can try again.
+              </p>
+            )}
+
+            <Button type="submit" className="w-full" disabled={status === "initiating" || status === "pending"}>
+              {status === "initiating" ? (
+                <>
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                  Sending M-Pesa prompt...
+                </>
+              ) : status === "pending" ? (
+                "Waiting for payment..."
+              ) : (
+                <>
+                  <Smartphone className="h-4 w-4" />
+                  Pay {packagePrice} with M-Pesa
+                </>
+              )}
+            </Button>
+            <p className="text-center text-xs text-muted-foreground">
+              Payments are securely processed by PayHero. Never share your M-Pesa PIN.
+            </p>
+          </form>
+        )}
       </CardContent>
     </Card>
   );

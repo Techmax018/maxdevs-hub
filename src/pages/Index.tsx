@@ -107,7 +107,7 @@ const Index = () => {
                 </li>
               </ul>
               <Button asChild className="w-full bg-gradient-accent">
-                <Link to="/billing">Select Starter</Link>
+                <Link to="/billing" state={{ packageId: "startup" }}>Select Starter</Link>
               </Button>
             </div>
 
@@ -147,7 +147,7 @@ const Index = () => {
                 </li>
               </ul>
               <Button asChild className="w-full bg-gradient-accent">
-                <Link to="/billing">Select Professional</Link>
+                <Link to="/billing" state={{ packageId: "professional" }}>Select Professional</Link>
               </Button>
             </div>
 

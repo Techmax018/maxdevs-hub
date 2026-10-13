@@ -10,8 +10,9 @@ const Billing = () => {
   const navigate = useNavigate();
 
   // Derived state: direct lookup with fallbacks (no useState or useEffect needed)
-  const packageName = location.state?.packageName || "Professional Package";
-  const packagePrice = location.state?.packagePrice || "Ksh 60 000";
+  const packageId = location.state?.packageId === "startup" ? "startup" : "professional";
+  const packageName = packageId === "startup" ? "Startup Package" : "Professional Package";
+  const packagePrice = packageId === "startup" ? "KSh 40,000" : "KSh 60,000";
 
   return (
     <div className="min-h-screen bg-background">
@@ -33,11 +34,12 @@ const Billing = () => {
               Complete Your <span className="text-primary">Order</span>
             </h1>
             <p className="text-lg text-muted-foreground">
-              Secure payment processing powered by industry-leading encryption
+              Pay securely by M-Pesa with PayHero
             </p>
           </div>
 
           <BillingForm
+            packageId={packageId}
             packageName={packageName}
             packagePrice={packagePrice}
           />
