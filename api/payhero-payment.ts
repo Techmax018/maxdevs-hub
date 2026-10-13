@@ -52,6 +52,18 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     return;
   }
 
+  // Validate required env vars upfront so missing config gives a clear error
+  const token = process.env.PAYHERO_BASIC_TOKEN;
+  const channelId = process.env.PAYHERO_CHANNEL_ID;
+  if (!token || !channelId) {
+    console.error("Missing PayHero env vars:", { token: !!token, channelId: !!channelId });
+    res.statusCode = 500;
+    res.end(JSON.stringify({
+      error: "Payment gateway not configured. Set PAYHERO_BASIC_TOKEN and PAYHERO_CHANNEL_ID in Vercel environment variables.",
+    }));
+    return;
+  }
+
   let body: { packageId?: string; customerName?: string; phoneNumber?: string };
   try {
     body = JSON.parse(await readBody(req));
@@ -99,36 +111,47 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     client.release();
   }
 
-  // Trigger PayHero STK push
-  const siteUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : (process.env.SITE_URL ?? "https://maxdevs-hub.vercel.app");
+  // Use the stable production URL, not VERCEL_URL which changes per-deployment
+  const siteUrl = process.env.SITE_URL ?? "https://maxdevs-hub.vercel.app";
 
   const payheroRes = await fetch(PAYHERO_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: process.env.PAYHERO_BASIC_TOKEN!,
+      Authorization: token,
     },
     body: JSON.stringify({
       amount,
       phone_number: normalizedPhone,
-      channel_id: Number(process.env.PAYHERO_CHANNEL_ID),
+      channel_id: Number(channelId),
       provider: "m-pesa",
       external_reference: orderId,
       callback_url: `${siteUrl}/api/payhero-webhook`,
     }),
   });
 
+  const payheroText = await payheroRes.text();
+
   if (!payheroRes.ok) {
-    const errText = await payheroRes.text();
-    console.error("PayHero STK push failed:", payheroRes.status, errText);
+    console.error("PayHero STK push failed:", payheroRes.status, payheroText);
+    // Parse PayHero error message if available
+    let payheroMessage = `Payment gateway error (${payheroRes.status}).`;
+    try {
+      const parsed = JSON.parse(payheroText) as { message?: string; error?: string; detail?: string };
+      payheroMessage = parsed.message ?? parsed.error ?? parsed.detail ?? payheroMessage;
+    } catch { /* not JSON, use status code message */ }
+
     res.statusCode = 502;
-    res.end(JSON.stringify({ error: "Failed to initiate M-Pesa payment. Please try again." }));
+    res.end(JSON.stringify({ error: payheroMessage }));
     return;
   }
 
-  const payheroData = (await payheroRes.json()) as { reference?: string };
+  let payheroData: { reference?: string };
+  try {
+    payheroData = JSON.parse(payheroText) as { reference?: string };
+  } catch {
+    payheroData = {};
+  }
 
   if (payheroData.reference) {
     await getPool().query(
