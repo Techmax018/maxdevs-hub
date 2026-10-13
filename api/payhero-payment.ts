@@ -20,6 +20,10 @@ const PAYHERO_API_URL = "https://backend.payhero.co.ke/api/v2/payments";
 const PACKAGE_PRICES: Record<string, number> = {
   startup: 40000,
   professional: 60000,
+  "basic-update": 12000,
+  "technical-security": 25000,
+  "content-seo": 38000,
+  "site-audit": 10000,
 };
 
 function normalizePhone(raw: string): string {

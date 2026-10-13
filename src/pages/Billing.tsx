@@ -5,14 +5,29 @@ import { BillingForm } from "@/components/BillingForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
+// Fallback map so direct /billing navigation still works
+const PACKAGE_DEFAULTS: Record<string, { name: string; price: string }> = {
+  startup:             { name: "Startup Package",            price: "KSh 40,000" },
+  professional:        { name: "Professional Package",       price: "KSh 60,000" },
+  "basic-update":      { name: "Basic Update",               price: "KSh 12,000" },
+  "technical-security":{ name: "Technical / Security Update",price: "KSh 25,000" },
+  "content-seo":       { name: "Content & SEO Refresh",      price: "KSh 38,000" },
+  "site-audit":        { name: "Site Audit & Strategy",      price: "KSh 10,000" },
+};
+
 const Billing = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Derived state: direct lookup with fallbacks (no useState or useEffect needed)
-  const packageId = location.state?.packageId === "startup" ? "startup" : "professional";
-  const packageName = packageId === "startup" ? "Startup Package" : "Professional Package";
-  const packagePrice = packageId === "startup" ? "KSh 40,000" : "KSh 60,000";
+  const stateId    = location.state?.packageId   as string | undefined;
+  const stateName  = location.state?.packageName as string | undefined;
+  const statePrice = location.state?.packagePrice as string | undefined;
+
+  // Use whatever was passed; fall back to defaults map; last resort: startup
+  const packageId    = stateId ?? "startup";
+  const defaults     = PACKAGE_DEFAULTS[packageId] ?? PACKAGE_DEFAULTS["startup"];
+  const packageName  = stateName  ?? defaults.name;
+  const packagePrice = statePrice ?? defaults.price;
 
   return (
     <div className="min-h-screen bg-background">

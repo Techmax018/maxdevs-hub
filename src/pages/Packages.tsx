@@ -203,7 +203,7 @@ const Packages = () => {
                   </div>
                 </div>
 
-                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => navigate("/contact")}>Start Basic Update</Button>
+                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => handleSelectPackage("basic-update", "Basic Update", "KSh 12,000")}>Start Basic Update</Button>
               </CardContent>
             </Card>
 
@@ -237,7 +237,7 @@ const Packages = () => {
                   </div>
                 </div>
 
-                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => navigate("/contact")}>Start Technical Update</Button>
+                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => handleSelectPackage("technical-security", "Technical / Security Update", "KSh 25,000")}>Start Technical Update</Button>
               </CardContent>
             </Card>
 
@@ -271,7 +271,7 @@ const Packages = () => {
                   </div>
                 </div>
 
-                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => navigate("/contact")}>Start Content Refresh</Button>
+                <Button className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => handleSelectPackage("content-seo", "Content & SEO Refresh", "KSh 38,000")}>Start Content Refresh</Button>
               </CardContent>
             </Card>
           </div>
@@ -314,7 +314,7 @@ const Packages = () => {
                 </div>
               </div>
 
-              <Button size="lg" className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => navigate("/contact")}>Book Your Site Audit Now</Button>
+              <Button size="lg" className="w-full bg-gradient-to-r from-sky-500 to-cyan-600 text-white hover:from-sky-400 hover:to-cyan-500" onClick={() => handleSelectPackage("site-audit", "Site Audit & Strategy", "KSh 10,000")}>Book Your Site Audit Now</Button>
             </CardContent>
           </Card>
         </div>
