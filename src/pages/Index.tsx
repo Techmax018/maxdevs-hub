@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Zap, Shield, TrendingUp } from "lucide-react";
+import { ArrowRight, CheckCircle2, Globe2, Rocket, Shield, Sparkles, TrendingUp, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -79,7 +79,10 @@ const Index = () => {
           <h2 className="text-3xl font-bold mb-8">Web Development Packages</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-card p-8 rounded-lg shadow-medium border-2 border-border">
-              <div className="text-sm font-semibold text-accent mb-2">🚀 STARTUP PACKAGE</div>
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-accent">
+                <Rocket className="h-4 w-4" />
+                STARTUP PACKAGE
+              </div>
               <h3 className="text-3xl font-bold mb-2">KSh 40,000</h3>
               <p className="text-muted-foreground mb-6">
                 Perfect for solo entrepreneurs and basic informational sites.
@@ -115,7 +118,10 @@ const Index = () => {
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold">
                 MOST POPULAR
               </div>
-              <div className="text-sm font-semibold text-accent mb-2">✨ PROFESSIONAL PACKAGE</div>
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-accent">
+                <Sparkles className="h-4 w-4" />
+                PROFESSIONAL PACKAGE
+              </div>
               <h3 className="text-3xl font-bold mb-2">KSh 60,000</h3>
               <p className="text-muted-foreground mb-6">
                 Ideal for growing SMBs requiring custom features.
@@ -152,7 +158,10 @@ const Index = () => {
             </div>
 
             <div className="bg-card p-8 rounded-lg shadow-medium border-2 border-border">
-              <div className="text-sm font-semibold text-accent mb-2">🌐 ENTERPRISE/E-COMMERCE</div>
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-accent">
+                <Globe2 className="h-4 w-4" />
+                ENTERPRISE/E-COMMERCE
+              </div>
               <h3 className="text-3xl font-bold mb-2">Custom Quote</h3>
               <p className="text-muted-foreground mb-6">
                 Starts at KSh 80,000 for complex functionality.

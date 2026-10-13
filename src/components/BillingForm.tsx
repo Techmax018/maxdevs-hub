@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { FunctionsFetchError } from "@supabase/supabase-js";
 import { CheckCircle2, CreditCard, LoaderCircle, Smartphone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +17,10 @@ interface BillingFormProps {
 type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed";
 
 const getFunctionErrorMessage = async (error: unknown, fallback: string) => {
+  if (error instanceof FunctionsFetchError) {
+    return "Cannot connect to Supabase. Check that Vercel's VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY point to your active Supabase project, then redeploy.";
+  }
+
   if (error && typeof error === "object" && "context" in error && error.context instanceof Response) {
     try {
       const body: unknown = await error.context.clone().json();

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, AlertCircle, Wrench, ShieldCheck, FileText } from "lucide-react";
+import { Check, AlertCircle, FileText, Globe2, Rocket, ShieldCheck, Sparkles, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Navigation from "@/components/Navigation";
@@ -42,7 +42,7 @@ const Packages = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
             <Card className="border-2 border-slate-200 bg-white/95 shadow-lg hover:border-primary/60 transition-all">
               <CardHeader>
-                <div className="text-4xl mb-2">🚀</div>
+                <Rocket className="mb-2 h-9 w-9 text-primary" aria-hidden="true" />
                 <CardTitle className="text-2xl">Startup Package</CardTitle>
                 <div className="pt-4">
                   <p className="text-4xl font-bold text-primary">KSh 40,000</p>
@@ -84,7 +84,7 @@ const Packages = () => {
                 MOST POPULAR
               </div>
               <CardHeader>
-                <div className="text-4xl mb-2">✨</div>
+                <Sparkles className="mb-2 h-9 w-9 text-primary" aria-hidden="true" />
                 <CardTitle className="text-2xl">Professional Package</CardTitle>
                 <div className="pt-4">
                   <p className="text-4xl font-bold text-primary">KSh 60,000</p>
@@ -127,7 +127,7 @@ const Packages = () => {
 
             <Card className="border-2 border-slate-200 bg-white/95 shadow-lg hover:border-primary/60 transition-all">
               <CardHeader>
-                <div className="text-4xl mb-2">🌐</div>
+                <Globe2 className="mb-2 h-9 w-9 text-primary" aria-hidden="true" />
                 <CardTitle className="text-2xl">Enterprise / E-commerce</CardTitle>
                 <div className="pt-4">
                   <p className="text-4xl font-bold text-primary">Custom</p>

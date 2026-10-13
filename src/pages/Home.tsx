@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Zap, Shield, Smartphone, TrendingUp } from "lucide-react";
+import { ArrowRight, Globe2, Rocket, Shield, Smartphone, Sparkles, TrendingUp, Zap } from "lucide-react";
 import Navigation from "@/components/Navigation";
 
 const Home = () => {
@@ -111,17 +111,17 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <Card className="border-2 hover:border-primary transition-colors">
               <CardContent className="pt-6 space-y-4">
-                <div className="text-4xl">🚀</div>
+                <Rocket className="h-9 w-9 text-primary" aria-hidden="true" />
                 <h3 className="text-2xl font-bold">Startup Package</h3>
                 <p className="text-3xl font-bold text-primary">Ksh 40000</p>
                 <p className="text-muted-foreground">
                   Perfect for solo entrepreneurs and basic informational sites
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>✓ 5 Pages included</li>
-                  <li>✓ Mobile responsive</li>
-                  <li>✓ Basic SEO setup</li>
-                  <li>✓ 30 days support</li>
+                <ul className="list-inside list-disc space-y-2 text-sm text-muted-foreground">
+                  <li>5 Pages included</li>
+                  <li>Mobile responsive</li>
+                  <li>Basic SEO setup</li>
+                  <li>30 days support</li>
                 </ul>
                 <Button asChild className="w-full">
                   <Link to="/packages">Learn More</Link>
@@ -131,7 +131,7 @@ const Home = () => {
 
             <Card className="border-2 border-primary shadow-lg scale-105">
               <CardContent className="pt-6 space-y-4">
-                <div className="text-4xl">✨</div>
+                <Sparkles className="h-9 w-9 text-primary" aria-hidden="true" />
                 <div className="inline-block px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-full">
                   MOST POPULAR
                 </div>
@@ -140,11 +140,11 @@ const Home = () => {
                 <p className="text-muted-foreground">
                   Growing SMBs requiring custom features and robust CMS
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>✓ Up to 12 pages + Blog</li>
-                  <li>✓ Dedicated CMS</li>
-                  <li>✓ Advanced SEO</li>
-                  <li>✓ 60 days support</li>
+                <ul className="list-inside list-disc space-y-2 text-sm text-muted-foreground">
+                  <li>Up to 12 pages + Blog</li>
+                  <li>Dedicated CMS</li>
+                  <li>Advanced SEO</li>
+                  <li>60 days support</li>
                 </ul>
                 <Button asChild className="w-full">
                   <Link to="/packages">Learn More</Link>
@@ -154,17 +154,17 @@ const Home = () => {
 
             <Card className="border-2 hover:border-primary transition-colors">
               <CardContent className="pt-6 space-y-4">
-                <div className="text-4xl">🌐</div>
+                <Globe2 className="h-9 w-9 text-primary" aria-hidden="true" />
                 <h3 className="text-2xl font-bold">Enterprise Package</h3>
                 <p className="text-3xl font-bold text-primary">Custom</p>
                 <p className="text-muted-foreground">
                   Complex functionality, payments, and API integrations
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>✓ Custom page count</li>
-                  <li>✓ Database integration</li>
-                  <li>✓ Payment gateway</li>
-                  <li>✓ 90 days premium support</li>
+                <ul className="list-inside list-disc space-y-2 text-sm text-muted-foreground">
+                  <li>Custom page count</li>
+                  <li>Database integration</li>
+                  <li>Payment gateway</li>
+                  <li>90 days premium support</li>
                 </ul>
                 <Button asChild variant="outline" className="w-full">
                   <Link to="/contact">Request Quote</Link>

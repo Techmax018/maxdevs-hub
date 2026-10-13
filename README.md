@@ -103,6 +103,8 @@ GOOGLE_SHEETS_WEBHOOK_URL=https://your-webhook-url
 
 > Note: The frontend uses `VITE_` prefixed variables. Edge functions should use standard environment names configured via Supabase.
 
+When connecting Supabase to Vercel, make sure the Vite build receives the Supabase project URL as `VITE_SUPABASE_URL` and its publishable key as `VITE_SUPABASE_PUBLISHABLE_KEY` for each Vercel environment, then redeploy. The Vite client cannot read connector variables that do not use the `VITE_` prefix.
+
 PayHero credentials must be stored only as Supabase Edge Function secrets. Never add them to frontend `VITE_` variables or commit them:
 
 ```sh

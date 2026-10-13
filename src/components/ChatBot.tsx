@@ -32,7 +32,7 @@ const ChatBot = () => {
     if (isOpen && messages.length === 0) {
       setMessages([{
         role: 'assistant',
-        content: "Hi! I'm Max from MaxDevs. 👋 I'm here to help you with your web development project. What type of website or app are you looking to build?"
+        content: "Hi! I'm Max from MaxDevs. I'm here to help you with your web development project. What type of website or app are you looking to build?"
       }]);
     }
   }, [isOpen, messages.length]);
